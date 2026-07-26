@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investor Research"
+  short_description: "Evidence-led market and valuation research"
+  default_prompt: "Use $investor-research to analyze this security, including the downside case."

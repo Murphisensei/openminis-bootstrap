@@ -1,0 +1,4 @@
+interface:
+  display_name: "Critical Review"
+  short_description: "Find the strongest evidence-based failure point"
+  default_prompt: "Use $critical-review to stress-test this argument and lead with its strongest weakness."

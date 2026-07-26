@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Router"
+  short_description: "Find current facts with strong source discipline"
+  default_prompt: "Use $research-router to verify this question with current primary sources."

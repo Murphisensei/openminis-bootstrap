@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pharma Research"
+  short_description: "Clinical, regulatory, commercial, and BD analysis"
+  default_prompt: "Use $pharma-research to assess this asset from disease burden through commercial value."

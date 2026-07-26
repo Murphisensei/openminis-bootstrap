@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "repository": "Murphisensei/openminis-bootstrap",
+  "defaultRef": "main",
+  "compatibility": {
+    "openMinisVersion": ">=1.10",
+    "verifiedSourceCommit": "9cf3a855fecd27bb5735b84cacbd56852a3ab8dd"
+  },
+  "managedSkills": [
+    "openminis-bootstrap",
+    "openviking-memory",
+    "remote-toolbox",
+    "research-router",
+    "investor-research",
+    "pharma-research",
+    "critical-review"
+  ],
+  "mcpServers": [
+    {
+      "name": "openviking",
+      "urlEnv": "OPENVIKING_MCP_URL",
+      "tokenEnv": "OPENVIKING_MCP_TOKEN",
+      "required": true
+    },
+    {
+      "name": "toolbox",
+      "urlEnv": "OPENCLAW_MCP_URL",
+      "tokenEnv": "OPENCLAW_MCP_TOKEN",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Remote Toolbox"
+  short_description: "Route approved work to Tailnet server tools"
+  default_prompt: "Use $remote-toolbox to run the narrowest approved server-side tool for this task."

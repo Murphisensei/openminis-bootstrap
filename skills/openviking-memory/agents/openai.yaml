@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenViking Memory"
+  short_description: "Recall and write durable cross-device memory"
+  default_prompt: "Use $openviking-memory to recall relevant context before answering."

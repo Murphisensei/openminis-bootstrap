@@ -47,13 +47,32 @@ else
   fail 'saved client profile does not match the requested profile'
 fi
 
-for skill in openminis-bootstrap openviking-memory openminis-agent; do
-  if [ -s "$minis_root/skills/$skill/SKILL.md" ]; then
-    pass "skill $skill"
-  else
-    fail "skill $skill is missing"
-  fi
-done
+manifest_state="$minis_root/config/openminis-bootstrap/manifest.json"
+manifest_tool="$minis_root/skills/openminis-bootstrap/scripts/manifest_cli.py"
+manifest_ok=0
+if command -v python3 >/dev/null 2>&1 && \
+   [ -s "$manifest_state" ] && [ -s "$manifest_tool" ] && \
+   python3 "$manifest_tool" validate "$manifest_state" >/dev/null 2>&1; then
+  pass 'bootstrap manifest'
+  manifest_ok=1
+else
+  fail 'bootstrap manifest is missing or invalid; rerun install.sh'
+fi
+
+if [ "$manifest_ok" -eq 1 ]; then
+  for skill in $(python3 "$manifest_tool" core-skills "$manifest_state"); do
+    if [ -s "$minis_root/skills/$skill/SKILL.md" ]; then
+      pass "skill $skill"
+    else
+      fail "skill $skill is missing"
+    fi
+  done
+fi
+if [ -s "$minis_root/skills/openminis-agent/SKILL.md" ]; then
+  pass 'skill openminis-agent'
+else
+  fail 'skill openminis-agent is missing'
+fi
 
 if [ -s "$minis_root/memory/SOUL.md" ] && \
    grep -q '^name: "Taco"$' "$minis_root/memory/SOUL.md"; then
@@ -62,43 +81,63 @@ else
   fail 'Taco SOUL is missing or invalid'
 fi
 
-if printenv OPENVIKING_MCP_URL >/dev/null 2>&1; then
-  pass 'OPENVIKING_MCP_URL is set'
-else
-  fail 'OPENVIKING_MCP_URL is missing'
-fi
-
-if printenv OPENVIKING_MCP_TOKEN >/dev/null 2>&1; then
-  pass 'OPENVIKING_MCP_TOKEN is set'
-else
-  fail 'OPENVIKING_MCP_TOKEN is missing'
+if [ "$manifest_ok" -eq 1 ]; then
+  for variable in $(python3 "$manifest_tool" required-env "$manifest_state"); do
+    variable_value="$(printenv "$variable" 2>/dev/null || true)"
+    if [ -n "$variable_value" ]; then
+      pass "$variable is set"
+    else
+      fail "$variable is missing"
+    fi
+  done
 fi
 
 if command -v minis-mcp-cli >/dev/null 2>&1; then
   pass 'minis-mcp-cli exists'
-  ping_output="$(minis-mcp-cli ping openviking 2>&1)"
-  ping_status=$?
-  if [ "$ping_status" -ne 0 ] && printf '%s' "$ping_output" | grep -q 'NO_DAEMON'; then
-    minis-mcp-cli shutdown >/dev/null 2>&1 || true
-    rm -f \
-      /tmp/minis-mcp-daemon.lock \
-      /tmp/minis-mcp-daemon.pid \
-      /tmp/minis-mcp-daemon.port
-    ping_output="$(minis-mcp-cli ping openviking 2>&1)"
-    ping_status=$?
-  fi
-  if [ "$ping_status" -eq 0 ]; then
-    pass 'OpenViking MCP handshake'
-    tools="$(minis-mcp-cli tools openviking 2>/dev/null || true)"
-    for tool in memory_search memory_read memory_remember health; do
-      if printf '%s' "$tools" | grep -q "$tool"; then
-        pass "OpenViking tool $tool"
-      else
-        fail "OpenViking tool $tool is missing"
+  if [ "$manifest_ok" -eq 1 ]; then
+    doctor_tsv="$(mktemp /tmp/openminis-bootstrap-doctor.XXXXXX)"
+    python3 "$manifest_tool" doctor-tsv "$manifest_state" > "$doctor_tsv"
+    while IFS="$(printf '\t')" read -r server required url_var token_var required_tools; do
+      test -n "$server" || continue
+      url_value="$(printenv "$url_var" 2>/dev/null || true)"
+      token_value="$(printenv "$token_var" 2>/dev/null || true)"
+      if [ -z "$url_value" ] || [ -z "$token_value" ]; then
+        if [ "$required" -eq 1 ]; then
+          fail "$server MCP configuration variables are missing"
+        else
+          pass "$server optional MCP is not configured"
+        fi
+        continue
       fi
-    done
-  else
-    fail 'OpenViking MCP handshake failed'
+      ping_output="$(minis-mcp-cli ping "$server" 2>&1)"
+      ping_status=$?
+      if [ "$ping_status" -ne 0 ] && printf '%s' "$ping_output" | grep -q 'NO_DAEMON'; then
+        minis-mcp-cli shutdown >/dev/null 2>&1 || true
+        rm -f \
+          /tmp/minis-mcp-daemon.lock \
+          /tmp/minis-mcp-daemon.pid \
+          /tmp/minis-mcp-daemon.port
+        ping_output="$(minis-mcp-cli ping "$server" 2>&1)"
+        ping_status=$?
+      fi
+      if [ "$ping_status" -eq 0 ]; then
+        pass "$server MCP handshake"
+        tools="$(minis-mcp-cli tools "$server" 2>/dev/null || true)"
+        old_ifs="$IFS"
+        IFS=,
+        for tool in $required_tools; do
+          if printf '%s' "$tools" | grep -q "$tool"; then
+            pass "$server tool $tool"
+          else
+            fail "$server tool $tool is missing"
+          fi
+        done
+        IFS="$old_ifs"
+      else
+        fail "$server MCP handshake failed"
+      fi
+    done < "$doctor_tsv"
+    rm -f "$doctor_tsv"
   fi
 else
   fail 'minis-mcp-cli is missing'

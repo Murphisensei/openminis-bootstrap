@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE_SKILLS = {"openminis-bootstrap", "openviking-memory"}
-EXPECTED_MANAGED = CORE_SKILLS | {"openminis-agent"}
+REQUIRED_COMMON_SKILLS = {"openminis-bootstrap", "openviking-memory", "web-search"}
 EXPECTED_PROFILES = {"freddy", "yurik"}
 
 
@@ -63,24 +62,25 @@ def soul_token_count(body: str) -> int:
 
 def main() -> None:
     manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
-    if set(manifest["managedSkills"]) != EXPECTED_MANAGED:
-        fail("manifest skill set differs from validator")
-    mcp_servers = manifest.get("mcpServers", [])
-    if len(mcp_servers) != 1 or mcp_servers[0] != {
-        "name": "openviking",
-        "urlEnv": "OPENVIKING_MCP_URL",
-        "tokenEnv": "OPENVIKING_MCP_TOKEN",
-        "required": True,
-    }:
-        fail("manifest must contain exactly one required OpenViking MCP")
+    manifest_tool = ROOT / "skills" / "openminis-bootstrap" / "scripts" / "manifest_cli.py"
+    subprocess.run([sys.executable, str(manifest_tool), "validate", str(ROOT / "manifest.json")], check=True)
+    managed = set(manifest["managedSkills"])
+    if "openminis-agent" not in managed:
+        fail("manifest must manage openminis-agent")
+    if not REQUIRED_COMMON_SKILLS.issubset(managed):
+        fail(f"required common skills missing: {sorted(REQUIRED_COMMON_SKILLS - managed)}")
+    mcp_names = {server["name"] for server in manifest["mcpServers"]}
+    if not {"openviking", "websearch"}.issubset(mcp_names):
+        fail("manifest must contain openviking and websearch MCP servers")
 
     profiles = manifest.get("profiles", {})
     if set(profiles) != EXPECTED_PROFILES:
         fail("manifest profiles must be freddy and yurik")
 
     actual = {path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md")}
-    if not CORE_SKILLS.issubset(actual):
-        fail(f"core skills missing: {sorted(CORE_SKILLS - actual)}")
+    common_managed = managed - {"openminis-agent"}
+    if not common_managed.issubset(actual):
+        fail(f"managed common skills missing: {sorted(common_managed - actual)}")
 
     for name in sorted(actual):
         path = ROOT / "skills" / name / "SKILL.md"
@@ -148,7 +148,7 @@ def main() -> None:
         if forbidden.search(text):
             fail(f"possible private material in {path.relative_to(ROOT)}")
 
-    print(f"PASS  {len(EXPECTED_MANAGED)} managed skills; {len(actual)} standalone skills")
+    print(f"PASS  {len(managed)} managed skills; {len(actual)} standalone skills")
     print("PASS  SOUL token counts " + ", ".join(
         f"{profile}={soul_counts[profile]}/2000" for profile in sorted(soul_counts)
     ))

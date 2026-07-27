@@ -8,6 +8,7 @@
   "managedSkills": [
     "openminis-bootstrap",
     "openviking-memory",
+    "web-search",
     "openminis-agent"
   ],
   "profiles": {
@@ -25,9 +26,34 @@
   "mcpServers": [
     {
       "name": "openviking",
+      "skill": "openviking-memory",
       "urlEnv": "OPENVIKING_MCP_URL",
       "tokenEnv": "OPENVIKING_MCP_TOKEN",
-      "required": true
+      "required": true,
+      "note": "Tailnet OpenViking durable memory; recall first, write only stable facts.",
+      "requiredTools": [
+        "memory_search",
+        "memory_read",
+        "memory_remember",
+        "health"
+      ]
+    },
+    {
+      "name": "websearch",
+      "skill": "web-search",
+      "urlEnv": "WEBSEARCH_MCP_URL",
+      "tokenEnv": "WEBSEARCH_MCP_TOKEN",
+      "required": true,
+      "note": "Tailnet current web, URL, X, Scholar, patents, trends, and Maps search.",
+      "requiredTools": [
+        "web_search",
+        "read_url",
+        "x_search",
+        "vertical_search",
+        "grounded_search",
+        "provider_status",
+        "health"
+      ]
     }
   ]
 }

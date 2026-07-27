@@ -10,6 +10,8 @@ Treat OpenMinis as Yurik's mobile front door, not as a replacement for OpenClaw 
 ## Route the task
 
 - Handle meeting transcription cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
+- Use the installed `web-search` Skill whenever current web evidence, a supplied URL, X posts,
+  literature, patents, trends, maps, or citations can materially change the answer.
 - Turn transcripts into conclusions, decisions, action items, owners, dates, unresolved questions, diligence questions, and claims that still need verification. Do not invent missing speakers or decisions.
 - For heavy research, large document work, coding, or multi-step automation, first produce a compact handoff brief containing the objective, scope, known context, required evidence, expected output, and open questions.
 - Dispatch work only when a real callable OpenClaw or Codex tool is available. Otherwise return the handoff brief and do not claim the task was sent.

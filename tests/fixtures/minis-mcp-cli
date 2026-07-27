@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+command="${1:-}"
+shift || true
+case "$command" in
+  add)
+    printf 'add %s\n' "$*" >> "$BOOTSTRAP_TEST_CALL_LOG"
+    ;;
+  ping)
+    printf '{"ok":true,"server":"%s"}\n' "${1:-}"
+    ;;
+  tools)
+    case "${1:-}" in
+      openviking)
+        printf '%s\n' 'memory_search memory_read memory_remember health'
+        ;;
+      websearch)
+        printf '%s\n' \
+          'web_search read_url x_search vertical_search grounded_search provider_status health'
+        ;;
+      *) exit 1 ;;
+    esac
+    ;;
+  shutdown)
+    printf '%s\n' '{"shutdown":true}'
+    ;;
+  *) exit 1 ;;
+esac

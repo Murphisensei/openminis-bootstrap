@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+output=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -o)
+      shift
+      output="$1"
+      ;;
+  esac
+  shift
+done
+test -n "$output"
+cp "$BOOTSTRAP_TEST_ARCHIVE" "$output"

@@ -1,3 +1,5 @@
 env_var,required,destination,bitwarden_item,bitwarden_field,notes
 OPENVIKING_MCP_URL,yes,OpenMinis Environment Variables,,,Tailnet HTTPS URL
 OPENVIKING_MCP_TOKEN,yes,OpenMinis Environment Variables,,,Use the Token matching the selected Freddy or Yurik profile; both access the shared memory library
+WEBSEARCH_MCP_URL,yes,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL
+WEBSEARCH_MCP_TOKEN,yes,OpenMinis Environment Variables,,,Use the Web Search Token matching the selected Freddy or Yurik profile; never copy provider API keys

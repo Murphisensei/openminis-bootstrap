@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Search"
+  short_description: "Route current web, URL, X, and vertical research"
+  default_prompt: "Use $web-search to find and cite current information."

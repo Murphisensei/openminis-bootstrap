@@ -6,15 +6,15 @@ ref="${OPENMINIS_BOOTSTRAP_REF:-main}"
 minis_root="${OPENMINIS_ROOT:-/var/minis}"
 configure_mcp=0
 profile=""
-core_skills="openminis-bootstrap openviking-memory"
 
 usage() {
   printf '%s\n' \
     'Usage: install.sh --profile freddy|yurik [--configure-mcp]' \
     '' \
-    'Installs the selected Taco SOUL, agent skill, and OpenViking memory link.' \
+    'Installs the selected Taco SOUL plus all common manifest-managed skills and MCP links.' \
     'After first setup, --profile may be omitted to reuse the saved profile.' \
-    '--configure-mcp adds the Tailnet memory MCP using $$VARNAME placeholders.'
+    '--configure-mcp requires every mandatory MCP variable during first setup.' \
+    'Normal updates configure any MCP whose environment-variable pair is already present.'
 }
 
 while [ "$#" -gt 0 ]; do
@@ -90,12 +90,39 @@ tar -xzf "$archive" -C "$tmp"
 source_root="$(find "$tmp" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
 test -n "$source_root"
 test -d "$source_root/skills"
+manifest_source="$source_root/manifest.json"
+manifest_tool="$source_root/skills/openminis-bootstrap/scripts/manifest_cli.py"
+test -f "$manifest_source"
+test -f "$manifest_tool"
+if ! command -v python3 >/dev/null 2>&1; then
+  printf 'python3 is required to validate the bootstrap manifest.\n' >&2
+  exit 1
+fi
+python3 "$manifest_tool" validate "$manifest_source" >/dev/null
+core_skills="$(python3 "$manifest_tool" core-skills "$manifest_source")"
+mcp_tsv="$tmp/mcp.tsv"
+python3 "$manifest_tool" mcp-tsv "$manifest_source" > "$mcp_tsv"
+
+if [ "$configure_mcp" -eq 1 ]; then
+  missing=0
+  for variable in $(python3 "$manifest_tool" required-env "$manifest_source"); do
+    variable_value="$(printenv "$variable" 2>/dev/null || true)"
+    if [ -z "$variable_value" ]; then
+      printf 'Missing required variable: %s\n' "$variable" >&2
+      missing=1
+    fi
+  done
+  if [ "$missing" -ne 0 ]; then
+    exit 1
+  fi
+fi
+
 profile_root="$source_root/profiles/$profile"
 test -f "$profile_root/SOUL.md"
 test -f "$profile_root/skills/openminis-agent/SKILL.md"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-backup_root="$minis_root/backups/openminis-bootstrap-$timestamp"
+backup_root="$minis_root/backups/openminis-bootstrap-$timestamp-$$"
 mkdir -p \
   "$minis_root/skills" \
   "$minis_root/memory" \
@@ -141,6 +168,11 @@ if [ -f "$profile_state" ]; then
   cp "$profile_state" "$backup_root/config/profile"
 fi
 printf '%s\n' "$profile" > "$profile_state"
+manifest_state="$profile_state_dir/manifest.json"
+if [ -f "$manifest_state" ]; then
+  cp "$manifest_state" "$backup_root/config/manifest.json"
+fi
+cp "$manifest_source" "$manifest_state"
 
 configure_http_mcp() {
   name="$1"
@@ -162,13 +194,23 @@ configure_http_mcp() {
   printf 'Configured MCP %s with environment placeholders.\n' "$name"
 }
 
-if [ "$configure_mcp" -eq 1 ]; then
-  if ! command -v minis-mcp-cli >/dev/null 2>&1; then
+if command -v minis-mcp-cli >/dev/null 2>&1; then
+  while IFS="$(printf '\t')" read -r name url_var token_var required note; do
+    test -n "$name" || continue
+    url_value="$(printenv "$url_var" 2>/dev/null || true)"
+    token_value="$(printenv "$token_var" 2>/dev/null || true)"
+    if [ -n "$url_value" ] && [ -n "$token_value" ]; then
+      configure_http_mcp "$name" "$url_var" "$token_var" "$note"
+    else
+      printf 'Skipped MCP %s; set %s and %s, then rerun bootstrap.\n' \
+        "$name" "$url_var" "$token_var"
+    fi
+  done < "$mcp_tsv"
+elif [ "$configure_mcp" -eq 1 ]; then
     printf 'minis-mcp-cli is unavailable; MCP entries were not configured.\n' >&2
     exit 1
-  fi
-  configure_http_mcp openviking OPENVIKING_MCP_URL OPENVIKING_MCP_TOKEN \
-    'Tailnet OpenViking durable memory; recall first, write only stable facts.'
+else
+  printf 'minis-mcp-cli is unavailable; skipped MCP refresh.\n' >&2
 fi
 
 printf 'Installed %s managed skills.\n' "$installed"

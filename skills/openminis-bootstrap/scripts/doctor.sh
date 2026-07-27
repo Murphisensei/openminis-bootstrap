@@ -28,7 +28,18 @@ fi
 
 if command -v minis-mcp-cli >/dev/null 2>&1; then
   pass 'minis-mcp-cli exists'
-  if minis-mcp-cli ping openviking >/dev/null 2>&1; then
+  ping_output="$(minis-mcp-cli ping openviking 2>&1)"
+  ping_status=$?
+  if [ "$ping_status" -ne 0 ] && printf '%s' "$ping_output" | grep -q 'NO_DAEMON'; then
+    minis-mcp-cli shutdown >/dev/null 2>&1 || true
+    rm -f \
+      /tmp/minis-mcp-daemon.lock \
+      /tmp/minis-mcp-daemon.pid \
+      /tmp/minis-mcp-daemon.port
+    ping_output="$(minis-mcp-cli ping openviking 2>&1)"
+    ping_status=$?
+  fi
+  if [ "$ping_status" -eq 0 ]; then
     pass 'OpenViking MCP handshake'
     tools="$(minis-mcp-cli tools openviking 2>/dev/null || true)"
     for tool in memory_search memory_read memory_remember health; do

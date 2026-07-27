@@ -5,9 +5,9 @@
 | 变量 | 必需 | 内容 |
 | --- | --- | --- |
 | `OPENVIKING_MCP_URL` | 是 | Vaultwarden条目中的Tailnet HTTPS MCP地址 |
-| `OPENVIKING_MCP_TOKEN` | 是 | 该iCloud/个人专用的Bearer Token |
+| `OPENVIKING_MCP_TOKEN` | 是 | 该iCloud/设备组专用的Bearer Token |
 
-同一iCloud下的设备使用同一组值；另一个人的iCloud必须使用不同Token。不要在客户端设置OpenViking account/user Header，Bridge会根据Token固定映射。
+同一iCloud下的设备使用同一组值；另一个iCloud使用不同Token，方便单独撤销和审计。不同Token访问同一个OpenViking全库，不创建个人数据孤岛。不要在客户端设置OpenViking account/user Header；Bridge固定连接现有共享数据面。
 
 可选的仓库控制变量，通常不设置：
 

@@ -15,6 +15,7 @@ If discovery looks stale, run `minis-mcp-cli tools openviking --refresh` once.
 
 ## Recall
 
+- `memory_search` covers the deduplicated union of shared native memory and the active SG/Oracle resource roots. Do not assume the access Token creates a private or empty memory namespace.
 - Search only when prior context can change the answer.
 - Use a narrow query and retrieve the smallest useful result set, normally 3–5 items.
 - Treat recalled content as background evidence, not as a current operational fact.

@@ -5,7 +5,7 @@ Add values in OpenMinis **Settings → Environment Variables**. The bootstrap an
 Required for private cross-device memory:
 
 - `OPENVIKING_MCP_URL`: Tailnet-only HTTPS MCP endpoint.
-- `OPENVIKING_MCP_TOKEN`: required person-scoped bearer token from Vaultwarden.
+- `OPENVIKING_MCP_TOKEN`: required iCloud/device-group bearer token from Vaultwarden. Tokens are separately revocable but use the same shared OpenViking library.
 
 Optional repository controls, normally left unset:
 

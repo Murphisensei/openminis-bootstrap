@@ -24,6 +24,8 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh
 
 4. Report only pass/fail status and missing variable names. Never echo environment values, MCP headers, tokens, or provider keys.
 
+`NO_DAEMON` is an OpenMinis-local `minis-mcp-cli` cold-start failure, not proof that the remote OpenViking service is offline. The doctor clears only the three known temporary daemon state files and retries once when that exact code appears.
+
 OpenMinis registers shell-created skills after the current turn becomes idle; this can take up to 60 seconds. If a newly installed skill is not visible immediately, finish the turn and start a new chat before retrying.
 
 ## Update

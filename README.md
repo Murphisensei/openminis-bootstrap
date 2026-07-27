@@ -30,7 +30,8 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh
 
 - MCP只通过Tailscale Serve在Tailnet内开放；禁止Funnel。
 - 原生OpenViking仅监听服务器loopback。
-- 每个人使用独立Bearer Token和OpenViking账户命名空间。
+- 每个iCloud/设备组使用独立Bearer Token，便于单独撤销和审计；所有入口共享现有OpenViking全库。
+- Bridge搜索原生记忆与活跃跨主机资源的去重并集，OpenMinis只是现有多入口体系中的新增入口。
 - 不把Vaultwarden session、SSH key、GitHub写Token、云管理或交易凭据放入OpenMinis。
 
 部署说明见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变量说明见 [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md)。

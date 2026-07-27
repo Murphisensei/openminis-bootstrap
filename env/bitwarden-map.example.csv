@@ -1,9 +1,3 @@
 env_var,required,destination,bitwarden_item,bitwarden_field,notes
 OPENVIKING_MCP_URL,yes,OpenMinis Environment Variables,,,Tailnet HTTPS URL
-OPENVIKING_MCP_TOKEN,conditional,OpenMinis Environment Variables,,,Scoped memory MCP bearer token
-OPENCLAW_MCP_URL,no,OpenMinis Environment Variables,,,Optional toolbox URL
-OPENCLAW_MCP_TOKEN,no,OpenMinis Environment Variables,,,Scoped toolbox bearer token
-SUB2API_GPT_BASE_URL,conditional,OpenMinis Environment Variables,,,Primary provider base URL
-SUB2API_GPT_API_KEY,conditional,OpenMinis Environment Variables,,,Primary provider key
-DASHSCOPE_API_KEY,no,OpenMinis Environment Variables,,,Only if Aliyun direct fallback is enabled
-OPENROUTER_API_KEY,no,OpenMinis Environment Variables,,,Only if OpenRouter fallback is enabled
+OPENVIKING_MCP_TOKEN,yes,OpenMinis Environment Variables,,,Person-scoped memory MCP bearer token

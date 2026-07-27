@@ -6,15 +6,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED = {
-    "openminis-bootstrap",
-    "openviking-memory",
-    "remote-toolbox",
-    "research-router",
-    "investor-research",
-    "pharma-research",
-    "critical-review",
-}
+EXPECTED_MANAGED = {"openminis-bootstrap", "openviking-memory"}
 
 
 def fail(message: str) -> None:
@@ -69,14 +61,22 @@ def soul_token_count(body: str) -> int:
 
 def main() -> None:
     manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
-    if set(manifest["managedSkills"]) != EXPECTED:
+    if set(manifest["managedSkills"]) != EXPECTED_MANAGED:
         fail("manifest skill set differs from validator")
+    mcp_servers = manifest.get("mcpServers", [])
+    if len(mcp_servers) != 1 or mcp_servers[0] != {
+        "name": "openviking",
+        "urlEnv": "OPENVIKING_MCP_URL",
+        "tokenEnv": "OPENVIKING_MCP_TOKEN",
+        "required": True,
+    }:
+        fail("manifest must contain exactly one required OpenViking MCP")
 
     actual = {path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md")}
-    if actual != EXPECTED:
-        fail(f"unexpected skill set: {sorted(actual ^ EXPECTED)}")
+    if not EXPECTED_MANAGED.issubset(actual):
+        fail(f"managed skills missing: {sorted(EXPECTED_MANAGED - actual)}")
 
-    for name in sorted(EXPECTED):
+    for name in sorted(actual):
         path = ROOT / "skills" / name / "SKILL.md"
         frontmatter, _ = parse_frontmatter(path)
         if set(frontmatter) != {"name", "description"}:
@@ -108,7 +108,7 @@ def main() -> None:
     ]
     forbidden = re.compile("(" + "|".join(signatures) + ")", re.I)
     for path in ROOT.rglob("*"):
-        if not path.is_file() or ".git" in path.parts:
+        if not path.is_file() or {".git", ".codex", "dist"} & set(path.parts):
             continue
         try:
             text = path.read_text(encoding="utf-8")
@@ -117,7 +117,7 @@ def main() -> None:
         if forbidden.search(text):
             fail(f"possible private material in {path.relative_to(ROOT)}")
 
-    print(f"PASS  {len(EXPECTED)} skills")
+    print(f"PASS  {len(EXPECTED_MANAGED)} managed skills; {len(actual)} repository skills")
     print(f"PASS  SOUL token count {token_count}/2000")
     print("PASS  shell syntax")
     print("PASS  private-material scan")

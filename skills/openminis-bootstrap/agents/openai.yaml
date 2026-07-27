@@ -1,4 +1,4 @@
 interface:
   display_name: "OpenMinis Bootstrap"
-  short_description: "Install Taco SOUL, skills, and Tailnet MCP links"
-  default_prompt: "Use $openminis-bootstrap to install and diagnose my managed OpenMinis setup."
+  short_description: "Initialize and diagnose OpenViking memory"
+  default_prompt: "Use $openminis-bootstrap to initialize or repair my OpenViking memory connection."

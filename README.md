@@ -1,42 +1,36 @@
-# OpenMinis Bootstrap for Taco
+# OpenMinis OpenViking Bootstrap
 
-这是一个经过脱敏的 OpenMinis 手机端 bootstrap 仓库。它把现有 OpenClaw/Codex 体系中的主人格、高频研究路由和记忆边界，压缩成 OpenMinis 可直接导入并通过 iCloud 同步的版本。
+这个公开仓库只负责初始化 OpenMinis 与私人 OpenViking 记忆服务之间的连接。它不会安装 SOUL、研究工作流、远程执行工具或模型 Provider。
 
-仓库不包含任何密钥、Bitwarden 标识、私人账号、聊天平台 ID、主机名、内网地址、记忆正文或交易凭据。
+仓库不包含密钥、Vaultwarden 标识、私人账号、Tailnet 主机名、内网地址或记忆正文。
 
-## 快速安装
+## 初始化
 
-1. 在 OpenMinis 的 **Settings → Environment Variables** 至少添加 `OPENVIKING_MCP_URL`；如服务启用 bearer 鉴权，再添加 `OPENVIKING_MCP_TOKEN`。
-2. 在 Skills 页面通过 URL 导入：
+1. 在 OpenMinis **Settings → Environment Variables** 添加：
+   - `OPENVIKING_MCP_URL`
+   - `OPENVIKING_MCP_TOKEN`
+2. 在 Skills 页面导入：
 
    `https://github.com/Murphisensei/openminis-bootstrap/blob/main/skills/openminis-bootstrap/SKILL.md`
 
-3. 在对话中要求 OpenMinis 读取 `openminis-bootstrap` skill 并运行：
+3. 让 OpenMinis 执行：
 
 ```sh
-sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --with-soul --configure-mcp
+sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --configure-mcp
 sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh
 ```
 
-安装器会备份现有 SOUL 和受管 skills。OpenMinis 在当前回合结束或最多约 60 秒后扫描 shell 新建的 skills；必要时开启新对话。
+初始化器只安装 `openminis-bootstrap` 和 `openviking-memory`，注册一个带Bearer Token的Tailnet MCP，并检查握手与四个允许的记忆工具。SOUL和其他Skill保持不变。
 
-## 包含内容
+## 后续新增Skill
 
-- `SOUL.md`：从 Taco 主人格压缩而来，低于 OpenMinis 2000-token 上限。
-- `openminis-bootstrap`：安装、更新和诊断。
-- `openviking-memory`：通过 Tailnet MCP 检索和写入长期记忆。
-- `remote-toolbox`：可选的服务端 OpenClaw/Codex 能力入口。
-- `research-router`、`investor-research`、`pharma-research`、`critical-review`：高频可移植工作流。
+其他Skill放在各自的GitHub目录中，通过对应 `SKILL.md` URL单独导入。它们不加入Bootstrap的受管列表，也不会随记忆初始化自动安装。
 
-## 为什么不上传全部现有 skills
+## 安全边界
 
-现有技能中相当一部分绑定服务器路径、虚拟环境、付费数据库、浏览器登录态、交易账户或基础设施权限。复制到手机会失效并扩大密钥面。本仓库采用“手机放路由，服务器保留执行环境”的结构，主机能力经窄权限 Tailnet MCP 暴露。
+- MCP只通过Tailscale Serve在Tailnet内开放；禁止Funnel。
+- 原生OpenViking仅监听服务器loopback。
+- 每个人使用独立Bearer Token和OpenViking账户命名空间。
+- 不把Vaultwarden session、SSH key、GitHub写Token、云管理或交易凭据放入OpenMinis。
 
-## 安全说明
-
-- GitHub 仓库应保持公开且无秘密，因此 OpenMinis 导入不需要 GitHub PAT。
-- 禁止启用 Tailscale Funnel；MCP 只在 Tailnet 内提供。
-- OpenMinis 当前会把环境变量值以 Base64 字段同步到 CloudKit secrets zone；Base64 不是应用层加密。只向手机放最小必要的 MCP token 和模型 key。
-- Bitwarden session、SSH key、云管理凭据、消息机器人 token、GitHub 写 token 和交易凭据必须留在可信服务器。
-
-详细架构与部署顺序见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变量清单见 [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md)。
+部署说明见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)，变量说明见 [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md)。

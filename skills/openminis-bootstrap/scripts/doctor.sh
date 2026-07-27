@@ -3,16 +3,64 @@ set -u
 
 status=0
 minis_root="${OPENMINIS_ROOT:-/var/minis}"
+profile=""
+
+usage() {
+  printf '%s\n' 'Usage: doctor.sh [--profile freddy|yurik]'
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --profile)
+      shift
+      if [ "$#" -eq 0 ]; then
+        printf '%s\n' 'Missing value for --profile' >&2
+        usage >&2
+        exit 2
+      fi
+      profile="$1"
+      ;;
+    --profile=*) profile="${1#--profile=}" ;;
+    --help|-h) usage; exit 0 ;;
+    *) printf 'Unknown option: %s\n' "$1" >&2; usage >&2; exit 2 ;;
+  esac
+  shift
+done
 
 pass() { printf 'PASS  %s\n' "$1"; }
 fail() { printf 'FAIL  %s\n' "$1"; status=1; }
-for skill in openminis-bootstrap openviking-memory; do
+profile_state="$minis_root/config/openminis-bootstrap/profile"
+saved_profile=""
+if [ -s "$profile_state" ]; then
+  saved_profile="$(sed -n '1p' "$profile_state")"
+fi
+if [ -z "$profile" ]; then
+  profile="$saved_profile"
+fi
+case "$profile" in
+  freddy|yurik) ;;
+  *) fail 'client profile is missing or invalid' ;;
+esac
+if [ -n "$saved_profile" ] && [ "$saved_profile" = "$profile" ]; then
+  pass "client profile $profile"
+else
+  fail 'saved client profile does not match the requested profile'
+fi
+
+for skill in openminis-bootstrap openviking-memory openminis-agent; do
   if [ -s "$minis_root/skills/$skill/SKILL.md" ]; then
     pass "skill $skill"
   else
     fail "skill $skill is missing"
   fi
 done
+
+if [ -s "$minis_root/memory/SOUL.md" ] && \
+   grep -q '^name: "Taco"$' "$minis_root/memory/SOUL.md"; then
+  pass 'Taco SOUL'
+else
+  fail 'Taco SOUL is missing or invalid'
+fi
 
 if printenv OPENVIKING_MCP_URL >/dev/null 2>&1; then
   pass 'OPENVIKING_MCP_URL is set'

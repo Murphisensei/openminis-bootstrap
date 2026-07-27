@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taco Agent — Freddy"
+  short_description: "Freddy 的 OpenMinis 移动工作、研究分流与长期记忆协议"
+  default_prompt: "Use $openminis-agent to handle this request with Freddy's Taco operating protocol."

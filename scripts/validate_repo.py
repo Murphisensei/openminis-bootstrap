@@ -6,7 +6,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_MANAGED = {"openminis-bootstrap", "openviking-memory"}
+CORE_SKILLS = {"openminis-bootstrap", "openviking-memory"}
+EXPECTED_MANAGED = CORE_SKILLS | {"openminis-agent"}
+EXPECTED_PROFILES = {"freddy", "yurik"}
 
 
 def fail(message: str) -> None:
@@ -72,9 +74,13 @@ def main() -> None:
     }:
         fail("manifest must contain exactly one required OpenViking MCP")
 
+    profiles = manifest.get("profiles", {})
+    if set(profiles) != EXPECTED_PROFILES:
+        fail("manifest profiles must be freddy and yurik")
+
     actual = {path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md")}
-    if not EXPECTED_MANAGED.issubset(actual):
-        fail(f"managed skills missing: {sorted(EXPECTED_MANAGED - actual)}")
+    if not CORE_SKILLS.issubset(actual):
+        fail(f"core skills missing: {sorted(CORE_SKILLS - actual)}")
 
     for name in sorted(actual):
         path = ROOT / "skills" / name / "SKILL.md"
@@ -86,12 +92,37 @@ def main() -> None:
         if len(frontmatter["description"]) > 1024:
             fail(f"description too long for {name}")
 
-    soul_meta, soul_body = parse_frontmatter(ROOT / "SOUL.md")
-    if set(soul_meta) != {"name", "style", "lang"}:
-        fail("SOUL frontmatter keys must be name, style, and lang")
-    token_count = soul_token_count(soul_body.strip())
-    if token_count > 2000:
-        fail(f"SOUL exceeds OpenMinis limit: {token_count}/2000")
+    soul_counts: dict[str, int] = {}
+    for profile in sorted(EXPECTED_PROFILES):
+        config = profiles[profile]
+        if config.get("assistant") != "Taco":
+            fail(f"profile {profile} assistant must be Taco")
+        expected_soul = f"profiles/{profile}/SOUL.md"
+        expected_agent = f"profiles/{profile}/skills/openminis-agent"
+        if config.get("soul") != expected_soul:
+            fail(f"profile {profile} SOUL path mismatch")
+        if config.get("agentSkill") != expected_agent:
+            fail(f"profile {profile} agent skill path mismatch")
+
+        soul_path = ROOT / expected_soul
+        soul_meta, soul_body = parse_frontmatter(soul_path)
+        if set(soul_meta) != {"name", "style", "lang"}:
+            fail(f"{profile} SOUL frontmatter must be name, style, and lang")
+        if soul_meta["name"] != "Taco":
+            fail(f"{profile} SOUL name must be Taco")
+        token_count = soul_token_count(soul_body.strip())
+        if token_count > 2000:
+            fail(f"{profile} SOUL exceeds OpenMinis limit: {token_count}/2000")
+        soul_counts[profile] = token_count
+
+        agent_path = ROOT / expected_agent / "SKILL.md"
+        agent_meta, _ = parse_frontmatter(agent_path)
+        if set(agent_meta) != {"name", "description"}:
+            fail(f"{profile} agent frontmatter must be name and description only")
+        if agent_meta["name"] != "openminis-agent":
+            fail(f"{profile} agent skill name mismatch")
+        if not (agent_path.parent / "agents" / "openai.yaml").is_file():
+            fail(f"{profile} agent openai.yaml is missing")
 
     for script in (ROOT / "skills").glob("*/scripts/*.sh"):
         subprocess.run(["sh", "-n", str(script)], check=True)
@@ -117,8 +148,10 @@ def main() -> None:
         if forbidden.search(text):
             fail(f"possible private material in {path.relative_to(ROOT)}")
 
-    print(f"PASS  {len(EXPECTED_MANAGED)} managed skills; {len(actual)} repository skills")
-    print(f"PASS  SOUL token count {token_count}/2000")
+    print(f"PASS  {len(EXPECTED_MANAGED)} managed skills; {len(actual)} standalone skills")
+    print("PASS  SOUL token counts " + ", ".join(
+        f"{profile}={soul_counts[profile]}/2000" for profile in sorted(soul_counts)
+    ))
     print("PASS  shell syntax")
     print("PASS  private-material scan")
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "OpenMinis Bootstrap"
-  short_description: "Initialize and diagnose OpenViking memory"
-  default_prompt: "Use $openminis-bootstrap to initialize or repair my OpenViking memory connection."
+  short_description: "Initialize Taco identity and shared OpenViking memory"
+  default_prompt: "Use $openminis-bootstrap to initialize or repair Freddy's or Yurik's Taco client."

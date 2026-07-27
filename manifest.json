@@ -7,8 +7,21 @@
   },
   "managedSkills": [
     "openminis-bootstrap",
-    "openviking-memory"
+    "openviking-memory",
+    "openminis-agent"
   ],
+  "profiles": {
+    "freddy": {
+      "assistant": "Taco",
+      "soul": "profiles/freddy/SOUL.md",
+      "agentSkill": "profiles/freddy/skills/openminis-agent"
+    },
+    "yurik": {
+      "assistant": "Taco",
+      "soul": "profiles/yurik/SOUL.md",
+      "agentSkill": "profiles/yurik/skills/openminis-agent"
+    }
+  },
   "mcpServers": [
     {
       "name": "openviking",

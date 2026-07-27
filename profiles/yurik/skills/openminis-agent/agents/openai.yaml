@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taco Agent — Yurik"
+  short_description: "Yurik 的 OpenMinis 移动工作、医疗尽调与长期记忆协议"
+  default_prompt: "Use $openminis-agent to handle this request with Yurik's Taco operating protocol."

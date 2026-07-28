@@ -14,6 +14,7 @@ REQUIRED_COMMON_SKILLS = {
     "image-studio",
     "video-generation",
     "pdf-reader",
+    "paperless",
     "file-download",
     "dashi",
 }
@@ -87,6 +88,7 @@ def main() -> None:
         "image",
         "video",
         "pdfreader",
+        "paperless",
         "download",
         "dashi",
     }

@@ -29,6 +29,9 @@ python3 /var/minis/skills/openminis-bootstrap/scripts/mcp_job.py status pdf JOB_
 
 4. Read the resulting `minis://workspace/...` Markdown file, answer from that content, and distinguish
    source text from interpretation. State missing or unreadable pages instead of filling gaps.
+5. After answering, ask whether the user wants the original PDF archived to Paperless. Do not upload
+   it to Paperless before the user agrees. On agreement, use `$paperless` with the original PDF and
+   extracted Markdown so metadata is inferred from content and the correct person tag is enforced.
 
 The server accepts up to 500 pages for local extraction and up to 50 pages for OCR. For a larger
 scanned document, ask the user to split or prioritize it. Do not send the PDF to Web Search or any

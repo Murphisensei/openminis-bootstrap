@@ -13,6 +13,7 @@
     "image-studio",
     "video-generation",
     "pdf-reader",
+    "paperless",
     "file-download",
     "dashi",
     "openminis-agent"
@@ -118,6 +119,33 @@
       "requiredTools": [
         "create_upload",
         "start_read",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "paperless",
+      "skill": "paperless",
+      "urlEnv": "PAPERLESS_MCP_URL",
+      "tokenEnv": "PAPERLESS_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet Paperless full-text search, retrieval, download, and confirmed intelligent archival.",
+      "requiredTools": [
+        "search_documents",
+        "similar_documents",
+        "get_document",
+        "get_document_text",
+        "list_taxonomy",
+        "start_document_download",
+        "create_upload",
+        "start_archive_prepare",
+        "archive_show",
+        "archive_update",
+        "start_archive_commit",
+        "archive_status",
+        "archive_cancel",
+        "paperless_status",
         "job_status",
         "cancel_job",
         "health"

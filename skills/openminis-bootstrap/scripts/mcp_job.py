@@ -23,6 +23,7 @@ SERVICES = {
     "image": ("image", "IMAGE_MCP_URL", "IMAGE_MCP_TOKEN", "attachments"),
     "video": ("video", "VIDEO_MCP_URL", "VIDEO_MCP_TOKEN", "attachments"),
     "pdf": ("pdfreader", "PDF_MCP_URL", "PDF_MCP_TOKEN", "workspace"),
+    "paperless": ("paperless", "PAPERLESS_MCP_URL", "PAPERLESS_MCP_TOKEN", "attachments"),
     "download": ("download", "DOWNLOAD_MCP_URL", "DOWNLOAD_MCP_TOKEN", "attachments"),
 }
 DAEMON_FILES = (
@@ -393,6 +394,27 @@ def build_parser() -> argparse.ArgumentParser:
     pdf.add_argument("file")
     pdf.add_argument("--mode", choices=("auto", "local", "ocr"), default="auto")
 
+    paperless_prepare = sub.add_parser("paperless-prepare-start")
+    paperless_prepare.add_argument("file")
+    paperless_prepare.add_argument("--text")
+    paperless_prepare.add_argument("--title", default="")
+    paperless_prepare.add_argument("--date", default="")
+    paperless_prepare.add_argument("--document-type", default="")
+    paperless_prepare.add_argument("--correspondent", default="")
+    paperless_prepare.add_argument("--tags", default="")
+    paperless_prepare.add_argument(
+        "--sensitivity",
+        choices=("normal", "sensitive", "highly-sensitive"),
+        default="sensitive",
+    )
+    paperless_prepare.add_argument("--source-message-id", default="")
+
+    paperless_download = sub.add_parser("paperless-download-start")
+    paperless_download.add_argument("document_id", type=int)
+    paperless_download.add_argument(
+        "--rendition", choices=("original", "archive"), default="original"
+    )
+
     download = sub.add_parser("download-start")
     download.add_argument("url")
     download.add_argument("--mode", choices=("auto", "direct", "media", "audio"), default="auto")
@@ -482,6 +504,38 @@ def main() -> None:
             {"upload_id": upload_id, "filename": path.name, "mode": args.mode},
         )
         emit(started("pdf", result))
+    elif args.command == "paperless-prepare-start":
+        path = local_input(args.file)
+        document_upload_id = upload("paperless", path, "create_upload")
+        text_upload_id = ""
+        if args.text:
+            text_upload_id = upload("paperless", local_input(args.text), "create_upload")
+        result = mcp_call(
+            "paperless",
+            "start_archive_prepare",
+            {
+                "document_upload_id": document_upload_id,
+                "text_upload_id": text_upload_id,
+                "title": args.title,
+                "date": args.date,
+                "document_type": args.document_type,
+                "correspondent": args.correspondent,
+                "tags": args.tags,
+                "sensitivity": args.sensitivity,
+                "source_channel": "openminis",
+                "source_message_id": args.source_message_id,
+            },
+        )
+        emit(started("paperless", result))
+    elif args.command == "paperless-download-start":
+        if args.document_id <= 0:
+            raise WorkflowError("document_id must be positive")
+        result = mcp_call(
+            "paperless",
+            "start_document_download",
+            {"document_id": args.document_id, "rendition": args.rendition},
+        )
+        emit(started("paperless", result))
     elif args.command == "download-start":
         result = mcp_call(
             "download",

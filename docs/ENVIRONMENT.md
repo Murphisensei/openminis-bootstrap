@@ -16,6 +16,8 @@
 | `VIDEO_MCP_TOKEN` | 启用视频功能时 | 该iCloud/设备组专用的Video Bearer Token |
 | `PDF_MCP_URL` | 启用PDF功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
 | `PDF_MCP_TOKEN` | 启用PDF功能时 | 该iCloud/设备组专用的PDF Bearer Token |
+| `PAPERLESS_MCP_URL` | 启用Paperless时 | Vaultwarden条目中的Oracle Tailnet HTTPS地址 |
+| `PAPERLESS_MCP_TOKEN` | 启用Paperless时 | Freddy或Yurik专用的Paperless MCP Bearer Token |
 | `DOWNLOAD_MCP_URL` | 启用下载功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
 | `DOWNLOAD_MCP_TOKEN` | 启用下载功能时 | 该iCloud/设备组专用的Download Bearer Token |
 | `DASHI_MCP_URL` | 启用Dashi功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
@@ -28,6 +30,10 @@ Freddy设备填写Freddy Token，Yurik设备填写Yurik Token。不同OpenViking
 OpenMinis。六个新增能力各自使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
 Dashi的Freddy/Yurik出生档案保存在AWS KR的root管理私有文件，不经OpenViking检索，也不
 下发到手机。
+
+Paperless上游读写Token与元数据分析模型密钥只保留在Oracle；OpenMinis只填写MCP URL和
+个人MCP Token。归档时服务端从可信Token强制加入`person:freddy`或`person:yurik`，搜索默认
+覆盖该Paperless账号获准访问的全库，可按person标签筛选。
 
 可选的仓库控制变量，通常不设置：
 

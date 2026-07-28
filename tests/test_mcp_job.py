@@ -31,6 +31,8 @@ class MCPJobTests(unittest.TestCase):
                 "IMAGE_MCP_TOKEN": "test-token-not-a-secret",
                 "DOWNLOAD_MCP_URL": "https://download.example.invalid:10006/mcp",
                 "DOWNLOAD_MCP_TOKEN": "test-token-not-a-secret",
+                "PAPERLESS_MCP_URL": "https://paperless.example.invalid:10008/mcp",
+                "PAPERLESS_MCP_TOKEN": "test-token-not-a-secret",
             },
             clear=False,
         )
@@ -93,6 +95,38 @@ class MCPJobTests(unittest.TestCase):
             result = mcp_job.command_status(args)
         self.assertEqual(result["status"], "succeeded")
         fetch.assert_called_once_with("download", status["artifacts"][0], "job_1", "workspace")
+
+    def test_paperless_prepare_uploads_original_and_extracted_text(self) -> None:
+        document = self.root / "attachments" / "report.pdf"
+        extracted = self.root / "attachments" / "report.md"
+        document.write_bytes(b"%PDF-test")
+        extracted.write_text("体检报告", encoding="utf-8")
+        args = argparse.Namespace(
+            command="paperless-prepare-start",
+            file=str(document),
+            text=str(extracted),
+            title="",
+            date="",
+            document_type="",
+            correspondent="",
+            tags="",
+            sensitivity="sensitive",
+            source_message_id="",
+        )
+        with (
+            mock.patch.object(mcp_job, "upload", side_effect=["upload_doc", "upload_text"]),
+            mock.patch.object(
+                mcp_job,
+                "mcp_call",
+                return_value={"job_id": "job_prepare", "status": "queued"},
+            ) as call,
+            mock.patch.object(mcp_job, "emit"),
+            mock.patch.object(argparse.ArgumentParser, "parse_args", return_value=args),
+        ):
+            mcp_job.main()
+        self.assertEqual(call.call_args.args[0:2], ("paperless", "start_archive_prepare"))
+        self.assertEqual(call.call_args.args[2]["document_upload_id"], "upload_doc")
+        self.assertEqual(call.call_args.args[2]["text_upload_id"], "upload_text")
 
 
 if __name__ == "__main__":

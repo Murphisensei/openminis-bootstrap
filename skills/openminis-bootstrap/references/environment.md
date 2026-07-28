@@ -16,12 +16,14 @@ Optional capability pairs (set both values to enable that MCP):
 - `IMAGE_MCP_URL` and `IMAGE_MCP_TOKEN`
 - `VIDEO_MCP_URL` and `VIDEO_MCP_TOKEN`
 - `PDF_MCP_URL` and `PDF_MCP_TOKEN`
+- `PAPERLESS_MCP_URL` and `PAPERLESS_MCP_TOKEN`
 - `DOWNLOAD_MCP_URL` and `DOWNLOAD_MCP_TOKEN`
 - `DASHI_MCP_URL` and `DASHI_MCP_TOKEN`
 
 Every URL is the Tailnet-only HTTPS endpoint from that capability's Vaultwarden item. Every Token
 must match the selected person/iCloud group. Provider API keys and Dashi birth profiles remain on
-AWS KR.
+AWS KR. Paperless API and metadata-model credentials stay on Oracle; only the person-scoped
+Paperless MCP Token belongs on the device.
 
 Optional repository controls, normally left unset:
 

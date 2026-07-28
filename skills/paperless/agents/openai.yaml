@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperless Assistant"
+  short_description: "Search, read, download, and safely archive private documents"
+  default_prompt: "Use $paperless to search or read Paperless, or prepare an automatically classified archive draft and commit it only after confirmation."

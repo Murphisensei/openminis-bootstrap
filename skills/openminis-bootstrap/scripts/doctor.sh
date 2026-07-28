@@ -122,7 +122,8 @@ if command -v minis-mcp-cli >/dev/null 2>&1; then
       fi
       if [ "$ping_status" -eq 0 ]; then
         pass "$server MCP handshake"
-        tools="$(minis-mcp-cli tools "$server" 2>/dev/null || true)"
+        tools="$(minis-mcp-cli tools "$server" --refresh 2>/dev/null || \
+          minis-mcp-cli tools "$server" 2>/dev/null || true)"
         old_ifs="$IFS"
         IFS=,
         for tool in $required_tools; do

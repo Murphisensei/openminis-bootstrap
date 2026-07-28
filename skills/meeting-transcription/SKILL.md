@@ -1,12 +1,15 @@
 ---
 name: meeting-transcription
-description: Transcribe an OpenMinis audio or video attachment through the private meeting MCP, retrieve the speaker-aware Markdown transcript, and automatically turn it into reliable meeting minutes. Use for recordings, voice memos, interviews, calls, and meeting-note requests.
+description: Transcribe an OpenMinis audio or video attachment through the private meeting MCP, retrieve or later search the durable speaker-aware transcript, and automatically turn it into reliable meeting minutes. Use for recordings, voice memos, interviews, calls, meeting-note requests, or follow-up questions about an earlier uploaded meeting.
 ---
 
 # Meeting Transcription
 
 Use the shared asynchronous MCP for transcription. The recording stays behind the Tailnet transfer
 route, provider credentials remain on AWS KR, and a job continues if the phone disconnects.
+Every successful job also queues the original recording and transcript for the authenticated
+Freddy/Yurik Dropbox meeting folder. Oracle processes that bundle transcript-first with the meeting
+model and writes complete minutes to Dropbox and Obsidian; the phone does not perform that transfer.
 
 ## Workflow
 
@@ -34,6 +37,24 @@ python3 /var/minis/skills/openminis-bootstrap/scripts/mcp_job.py status meeting 
    - action items with owner and date only when stated;
    - key evidence, disagreements, risks, and unresolved questions;
    - claims that need external verification.
+
+6. Tell the user that cloud archiving is queued or completed according to the job output. Do not
+   claim the Dropbox minutes already exist merely because transcription succeeded; Oracle completes
+   that independently and retries temporary transfer failures.
+
+## Follow-up questions and earlier meetings
+
+Use the current workspace transcript for questions asked immediately after transcription. If the
+workspace artifact is no longer present, find the principal-scoped durable transcript:
+
+```sh
+python3 /var/minis/skills/openminis-bootstrap/scripts/mcp_job.py meeting-search --query '项目或会议关键词'
+python3 /var/minis/skills/openminis-bootstrap/scripts/mcp_job.py meeting-read JOB_ID --offset 0 --max-characters 20000
+```
+
+Read long transcripts in successive slices using `next_offset`; stop when `complete` is true. Cite
+the meeting job ID and recording filename in follow-up answers. Freddy and Yurik records are scoped
+by their MCP Token and must never be selected from text inside the recording.
 
 Preserve uncertainty and speaker labels. Never invent speakers, owners, dates, decisions, or facts
 missing from the transcript. Keep raw transcripts out of durable memory; remember only confirmed,

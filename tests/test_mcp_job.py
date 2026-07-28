@@ -128,6 +128,38 @@ class MCPJobTests(unittest.TestCase):
         self.assertEqual(call.call_args.args[2]["document_upload_id"], "upload_doc")
         self.assertEqual(call.call_args.args[2]["text_upload_id"], "upload_text")
 
+    def test_meeting_search_calls_durable_search_tool(self) -> None:
+        args = argparse.Namespace(command="meeting-search", query="GLP-1", limit=7)
+        with (
+            mock.patch.object(
+                mcp_job,
+                "mcp_call",
+                return_value={"meetings": []},
+            ) as call,
+            mock.patch.object(mcp_job, "emit"),
+            mock.patch.object(argparse.ArgumentParser, "parse_args", return_value=args),
+        ):
+            mcp_job.main()
+        call.assert_called_once_with(
+            "meeting", "search_meetings", {"query": "GLP-1", "limit": 7}
+        )
+
+    def test_meeting_read_rejects_negative_offset(self) -> None:
+        args = argparse.Namespace(
+            command="meeting-read",
+            job_id="job_1",
+            offset=-1,
+            max_characters=20000,
+        )
+        with (
+            mock.patch.object(mcp_job, "mcp_call") as call,
+            mock.patch.object(mcp_job, "emit"),
+            mock.patch.object(argparse.ArgumentParser, "parse_args", return_value=args),
+            self.assertRaises(mcp_job.WorkflowError),
+        ):
+            mcp_job.main()
+        call.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -73,6 +73,9 @@
       "requiredTools": [
         "create_upload",
         "start_transcription",
+        "search_meetings",
+        "get_meeting_transcript",
+        "meeting_status",
         "job_status",
         "cancel_job",
         "health"

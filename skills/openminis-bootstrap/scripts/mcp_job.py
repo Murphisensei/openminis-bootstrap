@@ -367,6 +367,17 @@ def build_parser() -> argparse.ArgumentParser:
     meeting.add_argument("--languages", default="zh,en")
     meeting.add_argument("--no-diarize", action="store_true")
 
+    meeting_search = sub.add_parser("meeting-search")
+    meeting_search.add_argument("--query", default="")
+    meeting_search.add_argument("--limit", type=int, choices=range(1, 101), default=20)
+
+    meeting_read = sub.add_parser("meeting-read")
+    meeting_read.add_argument("job_id")
+    meeting_read.add_argument("--offset", type=int, default=0)
+    meeting_read.add_argument(
+        "--max-characters", type=int, choices=range(1, 20001), default=20000
+    )
+
     image_gen = sub.add_parser("image-generate-start")
     image_gen.add_argument("--prompt", required=True)
     image_gen.add_argument("--size", choices=("1K", "2K", "4K"), default="2K")
@@ -449,6 +460,28 @@ def main() -> None:
             },
         )
         emit(started("meeting", result))
+    elif args.command == "meeting-search":
+        emit(
+            mcp_call(
+                "meeting",
+                "search_meetings",
+                {"query": args.query, "limit": args.limit},
+            )
+        )
+    elif args.command == "meeting-read":
+        if args.offset < 0:
+            raise WorkflowError("offset must be non-negative")
+        emit(
+            mcp_call(
+                "meeting",
+                "get_meeting_transcript",
+                {
+                    "job_id": args.job_id,
+                    "offset": args.offset,
+                    "max_characters": args.max_characters,
+                },
+            )
+        )
     elif args.command == "image-generate-start":
         result = mcp_call(
             "image",

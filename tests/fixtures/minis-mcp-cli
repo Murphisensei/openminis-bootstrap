@@ -17,7 +17,7 @@ case "$command" in
         ;;
       websearch)
         printf '%s\n' \
-          'web_search read_url x_search vertical_search grounded_search provider_status health'
+          'web_search read_url x_search vertical_search grounded_search travel_search provider_status health'
         ;;
       meeting)
         printf '%s\n' 'create_upload start_transcription job_status cancel_job health'

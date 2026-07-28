@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: Find and verify current web information through the websearch MCP. Use for latest facts or news, supplied URLs, source-backed answers, X/Twitter posts, scholarly literature, patents, Google Trends, maps, or any claim likely to have changed since model training.
+description: Find and verify current web information through the websearch MCP. Use for latest facts or news, supplied URLs, source-backed answers, X/Twitter posts, scholarly literature, patents, Google Trends, maps, lightweight travel lookup, or any claim likely to have changed since model training.
 ---
 
 # Web Search
@@ -23,11 +23,21 @@ If discovery is stale, run `minis-mcp-cli tools websearch --refresh` once.
 - Use `vertical_search` with `scholar`, `patents`, or `trends` for those exact source types.
 - Use `grounded_search` for Google Search synthesis or place-specific Maps questions. If it is
   unavailable, fall back to `web_search` and state the limitation.
+- Use `travel_search` for compact, structured travel lookup:
+  - `places`: requires `query`; add a city-level `location` when known.
+  - `hotels`: requires `query`, `check_in_date`, and `check_out_date`.
+  - `flights`: requires three-letter IATA `departure_id` / `arrival_id` and `outbound_date`;
+    add `return_date` only for a return trip.
+  - `events`: requires `query`; add a city-level `location` when known.
+  Compare returned price, rating, schedule, and availability as time-sensitive search evidence.
+  Do not imply booking, reservation, or calendar write-back occurred.
 - Leave provider selection on `auto` unless the user requests a provider or diagnostics require an
   explicit one. Do not rely on DuckDuckGo as an automatic fallback from a cloud-host IP.
 
-For broad multi-source research, large document work, or a task needing sustained synthesis,
-collect only enough current evidence to produce a compact OpenClaw/Codex handoff brief.
+This Skill can answer a single travel lookup or compare a small candidate set. For multi-day route
+design, cross-source optimization, booking strategy, or a task needing sustained synthesis, collect
+only enough current evidence to produce a compact OpenClaw handoff brief. Do not attempt to recreate
+OpenClaw's travel planner inside OpenMinis.
 
 ## Evidence standard
 

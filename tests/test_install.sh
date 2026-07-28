@@ -20,6 +20,7 @@ tar -czf "$archive" \
 
 export BOOTSTRAP_TEST_ARCHIVE="$archive"
 export BOOTSTRAP_TEST_CALL_LOG="$test_root/mcp-calls.log"
+export BOOTSTRAP_TEST_PYTHON="$(command -v python3)"
 export PATH="$repo_root/tests/fixtures:$PATH"
 export OPENMINIS_BOOTSTRAP_REPO=test/repository
 export OPENMINIS_BOOTSTRAP_REF=main
@@ -49,6 +50,10 @@ test -s "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/openminis-bootstrap/SKILL.md"
 test -s "$minis_root/skills/openviking-memory/SKILL.md"
 test -s "$minis_root/skills/web-search/SKILL.md"
+test -s "$minis_root/skills/finance-lookup/SKILL.md"
+test -s "$minis_root/skills/biomedical-lookup/SKILL.md"
+test -s "$minis_root/skills/travel-lookup/SKILL.md"
+test -s "$minis_root/skills/company-lookup/SKILL.md"
 test -s "$minis_root/skills/meeting-transcription/SKILL.md"
 test -s "$minis_root/skills/image-studio/SKILL.md"
 test -s "$minis_root/skills/video-generation/SKILL.md"
@@ -69,11 +74,17 @@ grep -Fq 'add --name dashi --url $$DASHI_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-update.log"
 find "$minis_root/backups" -mindepth 1 -maxdepth 1 -type d | grep -q .
 
-sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
-  --profile freddy > "$test_root/doctor.log"
+if ! sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
+  --profile freddy > "$test_root/doctor.log"; then
+  cat "$test_root/doctor.log" >&2
+  exit 1
+fi
 grep -Fq 'PASS  skill web-search' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch MCP handshake' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch tool web_search' "$test_root/doctor.log"
+grep -Fq 'PASS  websearch tool market_data' "$test_root/doctor.log"
+grep -Fq 'PASS  websearch tool drug_search' "$test_root/doctor.log"
+grep -Fq 'PASS  websearch tool aviation_search' "$test_root/doctor.log"
 grep -Fq 'PASS  openviking tool memory_search' "$test_root/doctor.log"
 grep -Fq 'PASS  meeting tool start_transcription' "$test_root/doctor.log"
 grep -Fq 'PASS  image tool start_edit' "$test_root/doctor.log"

@@ -35,12 +35,19 @@ Yurik 的设备执行：
 sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --configure-mcp && sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile yurik
 ```
 
+首次初始化时，安装器会在 OpenMinis Alpine 环境缺少运行库时安装 `python3` 和
+`py3-httpx`。依赖已经存在时会直接跳过；后续 Skill、SOUL 或 MCP 配置更新不会重复安装。
+
 安装器会更新：
 
 - `/var/minis/memory/SOUL.md`
 - `/var/minis/skills/openminis-agent`
 - `/var/minis/skills/openviking-memory`
 - `/var/minis/skills/web-search`
+- `/var/minis/skills/finance-lookup`
+- `/var/minis/skills/biomedical-lookup`
+- `/var/minis/skills/travel-lookup`
+- `/var/minis/skills/company-lookup`
 - `/var/minis/skills/meeting-transcription`
 - `/var/minis/skills/image-studio`
 - `/var/minis/skills/video-generation`

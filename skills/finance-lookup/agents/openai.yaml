@@ -1,0 +1,4 @@
+interface:
+  display_name: "Finance Lookup"
+  short_description: "Market data, financial reports, and document lookup"
+  default_prompt: "Use $finance-lookup to retrieve bounded market data or recent financial research."

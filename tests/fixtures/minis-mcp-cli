@@ -17,10 +17,11 @@ case "$command" in
         ;;
       websearch)
         printf '%s\n' \
-          'web_search read_url x_search vertical_search grounded_search travel_search provider_status health'
+          'web_search read_url x_search vertical_search grounded_search travel_search market_data finance_documents drug_search clinical_trials weather_search geo_search company_search aviation_search provider_status health'
         ;;
       meeting)
-        printf '%s\n' 'create_upload start_transcription job_status cancel_job health'
+        printf '%s\n' \
+          'create_upload start_transcription search_meetings get_meeting_transcript meeting_status job_status cancel_job health'
         ;;
       image)
         printf '%s\n' 'create_upload start_generation start_edit job_status cancel_job health'

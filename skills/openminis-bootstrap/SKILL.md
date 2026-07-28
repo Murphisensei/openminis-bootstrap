@@ -34,6 +34,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 
 `NO_DAEMON` is an OpenMinis-local `minis-mcp-cli` cold-start failure, not proof that the remote OpenViking service is offline. The doctor clears only the three known temporary daemon state files and retries once when that exact code appears.
 
+On first setup, the installer adds Alpine `python3` and `py3-httpx` only when the Python MCP
+runtime is missing. Later updates skip package installation. The doctor reports a missing `httpx`
+dependency but never installs system packages itself.
+
 OpenMinis registers shell-created skills after the current turn becomes idle; this can take up to 60 seconds. If a newly installed skill is not visible immediately, finish the turn and start a new chat before retrying.
 
 Meeting, image, video, PDF, and download MCPs are optional until both environment variables for that

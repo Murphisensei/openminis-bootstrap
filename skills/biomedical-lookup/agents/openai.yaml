@@ -1,0 +1,4 @@
+interface:
+  display_name: "Biomedical Lookup"
+  short_description: "FDA drug records and clinical trial lookup"
+  default_prompt: "Use $biomedical-lookup to find authoritative FDA drug or ClinicalTrials.gov records."

@@ -31,6 +31,9 @@ If discovery is stale, run `minis-mcp-cli tools websearch --refresh` once.
   - `events`: requires `query`; add a city-level `location` when known.
   Compare returned price, rating, schedule, and availability as time-sensitive search evidence.
   Do not imply booking, reservation, or calendar write-back occurred.
+- Route structured finance, biomedical, named-location weather/routes, and company questions to
+  the dedicated `finance-lookup`, `biomedical-lookup`, `travel-lookup`, or `company-lookup` Skill.
+  Those Skills share this same MCP and add no client environment variables.
 - Leave provider selection on `auto` unless the user requests a provider or diagnostics require an
   explicit one. Do not rely on DuckDuckGo as an automatic fallback from a cloud-host IP.
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Travel Lookup"
+  short_description: "Weather, maps, routes, flights, and places"
+  default_prompt: "Use $travel-lookup to check weather, routes, places, or flight information."

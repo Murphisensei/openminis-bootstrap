@@ -1,0 +1,4 @@
+interface:
+  display_name: "Company Lookup"
+  short_description: "Company registration, risk, and patent lookup"
+  default_prompt: "Use $company-lookup to check company registration, risk, or patent information."

@@ -92,9 +92,18 @@ if [ "$manifest_ok" -eq 1 ]; then
   done
 fi
 
+httpx_ok=0
+if command -v python3 >/dev/null 2>&1 && \
+   python3 -c 'import httpx' >/dev/null 2>&1; then
+  pass 'Python httpx MCP dependency'
+  httpx_ok=1
+else
+  fail 'Python httpx MCP dependency is missing; rerun install.sh'
+fi
+
 if command -v minis-mcp-cli >/dev/null 2>&1; then
   pass 'minis-mcp-cli exists'
-  if [ "$manifest_ok" -eq 1 ]; then
+  if [ "$manifest_ok" -eq 1 ] && [ "$httpx_ok" -eq 1 ]; then
     doctor_tsv="$(mktemp /tmp/openminis-bootstrap-doctor.XXXXXX)"
     python3 "$manifest_tool" doctor-tsv "$manifest_state" > "$doctor_tsv"
     while IFS="$(printf '\t')" read -r server required url_var token_var required_tools; do
@@ -139,6 +148,8 @@ if command -v minis-mcp-cli >/dev/null 2>&1; then
       fi
     done < "$doctor_tsv"
     rm -f "$doctor_tsv"
+  elif [ "$httpx_ok" -ne 1 ]; then
+    fail 'MCP handshake checks skipped because Python httpx is unavailable'
   fi
 else
   fail 'minis-mcp-cli is missing'

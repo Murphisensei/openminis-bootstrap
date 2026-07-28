@@ -94,8 +94,22 @@ manifest_source="$source_root/manifest.json"
 manifest_tool="$source_root/skills/openminis-bootstrap/scripts/manifest_cli.py"
 test -f "$manifest_source"
 test -f "$manifest_tool"
+
+# OpenMinis uses Alpine. Install the MCP HTTP runtime only on first setup;
+# subsequent updates take the fast path when both imports are already present.
+if ! command -v python3 >/dev/null 2>&1 || \
+   ! python3 -c 'import httpx' >/dev/null 2>&1; then
+  if command -v apk >/dev/null 2>&1; then
+    printf '%s\n' 'Installing first-run Python MCP dependencies.'
+    apk add --no-cache python3 py3-httpx
+  fi
+fi
 if ! command -v python3 >/dev/null 2>&1; then
-  printf 'python3 is required to validate the bootstrap manifest.\n' >&2
+  printf 'python3 is required to validate the bootstrap manifest; install it and rerun.\n' >&2
+  exit 1
+fi
+if ! python3 -c 'import httpx' >/dev/null 2>&1; then
+  printf 'Python httpx is required by minis-mcp-daemon; install it and rerun.\n' >&2
   exit 1
 fi
 python3 "$manifest_tool" validate "$manifest_source" >/dev/null

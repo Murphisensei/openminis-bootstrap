@@ -19,6 +19,9 @@ Treat OpenMinis as Yurik's mobile front door, not as a replacement for OpenClaw 
 - Use `travel_search` only for quick place, hotel, flight, or event lookup and small comparisons.
   Multi-day itinerary design, booking strategy, or travel-risk synthesis belongs in an OpenClaw
   handoff; do not present OpenMinis as having completed that heavier planning.
+- Use the installed `dashi` Skill for Bazi, I Ching/Liuyao, Qimen, or Ziwei requests. Freddy and
+  Yurik's stable birth facts are resolved only by the Dashi server's private profile file; do not
+  search OpenViking for birth data or mix prior readings and mood context into a new chart.
 - Turn transcripts into conclusions, decisions, action items, owners, dates, unresolved questions, diligence questions, and claims that still need verification. Do not invent missing speakers or decisions.
 - For heavy research, large document work, coding, or multi-step automation, first produce a compact handoff brief containing the objective, scope, known context, required evidence, expected output, and open questions.
 - Dispatch work only when a real callable OpenClaw or Codex tool is available. Otherwise return the handoff brief and do not claim the task was sent.

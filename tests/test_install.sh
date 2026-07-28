@@ -37,6 +37,8 @@ export PDF_MCP_URL=https://pdf.invalid/mcp
 export PDF_MCP_TOKEN=test-pdf-token
 export DOWNLOAD_MCP_URL=https://download.invalid/mcp
 export DOWNLOAD_MCP_TOKEN=test-download-token
+export DASHI_MCP_URL=https://dashi.invalid/mcp
+export DASHI_MCP_TOKEN=test-dashi-token
 
 minis_root="$test_root/minis"
 export OPENMINIS_ROOT="$minis_root"
@@ -52,6 +54,7 @@ test -s "$minis_root/skills/image-studio/SKILL.md"
 test -s "$minis_root/skills/video-generation/SKILL.md"
 test -s "$minis_root/skills/pdf-reader/SKILL.md"
 test -s "$minis_root/skills/file-download/SKILL.md"
+test -s "$minis_root/skills/dashi/SKILL.md"
 test -s "$minis_root/skills/openminis-agent/SKILL.md"
 test -s "$minis_root/config/openminis-bootstrap/manifest.json"
 grep -Fq 'add --name openviking --url $$OPENVIKING_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
@@ -61,6 +64,7 @@ grep -Fq 'add --name image --url $$IMAGE_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name video --url $$VIDEO_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name pdfreader --url $$PDF_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name download --url $$DOWNLOAD_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name dashi --url $$DASHI_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 
 sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-update.log"
 find "$minis_root/backups" -mindepth 1 -maxdepth 1 -type d | grep -q .
@@ -76,6 +80,7 @@ grep -Fq 'PASS  image tool start_edit' "$test_root/doctor.log"
 grep -Fq 'PASS  video tool start_generation' "$test_root/doctor.log"
 grep -Fq 'PASS  pdfreader tool start_read' "$test_root/doctor.log"
 grep -Fq 'PASS  download tool start_download' "$test_root/doctor.log"
+grep -Fq 'PASS  dashi tool start_iching_reading' "$test_root/doctor.log"
 
 strict_root="$test_root/strict-missing"
 export OPENMINIS_ROOT="$strict_root"

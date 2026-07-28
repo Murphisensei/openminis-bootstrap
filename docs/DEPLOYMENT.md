@@ -8,7 +8,7 @@ GitHub shared bootstrap ──> Freddy OpenMinis (Taco + Freddy Tokens) ──�
                           └> Yurik OpenMinis (Taco + Yurik Tokens) ───┤
                                                                      └── Tailnet ──> AWS KR independent MCPs
                                                                                      web / meeting / image
-                                                                                     video / PDF / download
+                                                                                     video / PDF / download / Dashi
 ```
 
 The public repository contains two non-secret client profiles, a manifest-driven installer, and common MCP-use Skills. Bridges, token databases, service configuration, and credentials stay on trusted servers. Tokens identify and authorize client entrances; they do not create separate OpenViking data silos. Person-specific capabilities live in separate GitHub repositories.
@@ -27,6 +27,8 @@ Before phone initialization, verify:
   account, and binds its application only to loopback behind its dedicated Tailnet HTTPS port;
 - meeting, image, video, and PDF provider credentials exist only in root-readable AWS KR service
   configuration; the download MCP has no provider credential;
+- Dashi's Freddy/Yurik birth profiles exist only in its root-managed AWS KR config file, are read
+  by exact subject ID, and are absent from GitHub, OpenViking search, MCP status, and client output;
 - upload and artifact routes require the same service-specific bearer Token, contain no Token in
   their URL, scope every object to the authenticated principal, and expire temporary data;
 - download rejects private/reserved destinations and enforces file-size bounds;

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dashi"
+  short_description: "Traditional metaphysics readings through private Dashi MCP"
+  default_prompt: "Use $dashi to request a structured, non-fatalistic reading."

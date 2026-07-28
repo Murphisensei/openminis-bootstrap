@@ -14,6 +14,7 @@
     "video-generation",
     "pdf-reader",
     "file-download",
+    "dashi",
     "openminis-agent"
   ],
   "profiles": {
@@ -131,6 +132,24 @@
       "note": "Tailnet bounded public-file and media downloader with SSRF controls.",
       "requiredTools": [
         "start_download",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "dashi",
+      "skill": "dashi",
+      "urlEnv": "DASHI_MCP_URL",
+      "tokenEnv": "DASHI_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet deterministic Bazi, I Ching, Qimen, and Ziwei readings with server-side models.",
+      "requiredTools": [
+        "profile_status",
+        "start_bazi_reading",
+        "start_iching_reading",
+        "start_qimen_reading",
+        "start_ziwei_reading",
         "job_status",
         "cancel_job",
         "health"

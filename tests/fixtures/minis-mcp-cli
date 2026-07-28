@@ -34,6 +34,10 @@ case "$command" in
       download)
         printf '%s\n' 'start_download job_status cancel_job health'
         ;;
+      dashi)
+        printf '%s\n' \
+          'profile_status start_bazi_reading start_iching_reading start_qimen_reading start_ziwei_reading job_status cancel_job health'
+        ;;
       *) exit 1 ;;
     esac
     ;;

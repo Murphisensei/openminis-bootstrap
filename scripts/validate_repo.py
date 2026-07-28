@@ -15,6 +15,7 @@ REQUIRED_COMMON_SKILLS = {
     "video-generation",
     "pdf-reader",
     "file-download",
+    "dashi",
 }
 EXPECTED_PROFILES = {"freddy", "yurik"}
 
@@ -79,7 +80,16 @@ def main() -> None:
     if not REQUIRED_COMMON_SKILLS.issubset(managed):
         fail(f"required common skills missing: {sorted(REQUIRED_COMMON_SKILLS - managed)}")
     mcp_names = {server["name"] for server in manifest["mcpServers"]}
-    expected_mcp = {"openviking", "websearch", "meeting", "image", "video", "pdfreader", "download"}
+    expected_mcp = {
+        "openviking",
+        "websearch",
+        "meeting",
+        "image",
+        "video",
+        "pdfreader",
+        "download",
+        "dashi",
+    }
     if not expected_mcp.issubset(mcp_names):
         fail(f"manifest MCP servers missing: {sorted(expected_mcp - mcp_names)}")
 

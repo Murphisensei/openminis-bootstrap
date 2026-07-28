@@ -18,12 +18,16 @@
 | `PDF_MCP_TOKEN` | 启用PDF功能时 | 该iCloud/设备组专用的PDF Bearer Token |
 | `DOWNLOAD_MCP_URL` | 启用下载功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
 | `DOWNLOAD_MCP_TOKEN` | 启用下载功能时 | 该iCloud/设备组专用的Download Bearer Token |
+| `DASHI_MCP_URL` | 启用Dashi功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `DASHI_MCP_TOKEN` | 启用Dashi功能时 | 该iCloud/设备组专用的Dashi Bearer Token |
 
 同一iCloud下的设备使用同一组值；另一个iCloud使用不同Token，方便单独撤销和审计。
 Freddy设备填写Freddy Token，Yurik设备填写Yurik Token。不同OpenViking Token访问同一个
 全库，不创建个人数据孤岛。不要在客户端设置OpenViking account/user Header；Bridge固定
 连接现有共享数据面。Web Search上游密钥和DashScope Key都只保留在AWS KR，绝不填写到
-OpenMinis。五个新增能力各自使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
+OpenMinis。六个新增能力各自使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
+Dashi的Freddy/Yurik出生档案保存在AWS KR的root管理私有文件，不经OpenViking检索，也不
+下发到手机。
 
 可选的仓库控制变量，通常不设置：
 

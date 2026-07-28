@@ -3,3 +3,13 @@ OPENVIKING_MCP_URL,yes,OpenMinis Environment Variables,,,Tailnet HTTPS URL
 OPENVIKING_MCP_TOKEN,yes,OpenMinis Environment Variables,,,Use the Token matching the selected Freddy or Yurik profile; both access the shared memory library
 WEBSEARCH_MCP_URL,yes,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL
 WEBSEARCH_MCP_TOKEN,yes,OpenMinis Environment Variables,,,Use the Web Search Token matching the selected Freddy or Yurik profile; never copy provider API keys
+MEETING_MCP_URL,when enabled,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL from the selected person's Meeting item
+MEETING_MCP_TOKEN,when enabled,OpenMinis Environment Variables,,,Use the selected person's Meeting Token; never copy the DashScope API key
+IMAGE_MCP_URL,when enabled,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL from the selected person's Image item
+IMAGE_MCP_TOKEN,when enabled,OpenMinis Environment Variables,,,Use the selected person's Image Token; never copy the DashScope API key
+VIDEO_MCP_URL,when enabled,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL from the selected person's Video item
+VIDEO_MCP_TOKEN,when enabled,OpenMinis Environment Variables,,,Use the selected person's Video Token; never copy the DashScope API key
+PDF_MCP_URL,when enabled,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL from the selected person's PDF item
+PDF_MCP_TOKEN,when enabled,OpenMinis Environment Variables,,,Use the selected person's PDF Token; never copy the DashScope API key
+DOWNLOAD_MCP_URL,when enabled,OpenMinis Environment Variables,,,AWS KR Tailnet HTTPS URL from the selected person's Download item
+DOWNLOAD_MCP_TOKEN,when enabled,OpenMinis Environment Variables,,,Use the selected person's Download Token

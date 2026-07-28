@@ -19,6 +19,21 @@ case "$command" in
         printf '%s\n' \
           'web_search read_url x_search vertical_search grounded_search provider_status health'
         ;;
+      meeting)
+        printf '%s\n' 'create_upload start_transcription job_status cancel_job health'
+        ;;
+      image)
+        printf '%s\n' 'create_upload start_generation start_edit job_status cancel_job health'
+        ;;
+      video)
+        printf '%s\n' 'create_audio_upload start_generation job_status cancel_job health'
+        ;;
+      pdfreader)
+        printf '%s\n' 'create_upload start_read job_status cancel_job health'
+        ;;
+      download)
+        printf '%s\n' 'start_download job_status cancel_job health'
+        ;;
       *) exit 1 ;;
     esac
     ;;

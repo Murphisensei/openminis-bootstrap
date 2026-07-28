@@ -27,6 +27,16 @@ export OPENVIKING_MCP_URL=https://memory.invalid/mcp
 export OPENVIKING_MCP_TOKEN=test-memory-token
 export WEBSEARCH_MCP_URL=https://search.invalid/mcp
 export WEBSEARCH_MCP_TOKEN=test-search-token
+export MEETING_MCP_URL=https://meeting.invalid/mcp
+export MEETING_MCP_TOKEN=test-meeting-token
+export IMAGE_MCP_URL=https://image.invalid/mcp
+export IMAGE_MCP_TOKEN=test-image-token
+export VIDEO_MCP_URL=https://video.invalid/mcp
+export VIDEO_MCP_TOKEN=test-video-token
+export PDF_MCP_URL=https://pdf.invalid/mcp
+export PDF_MCP_TOKEN=test-pdf-token
+export DOWNLOAD_MCP_URL=https://download.invalid/mcp
+export DOWNLOAD_MCP_TOKEN=test-download-token
 
 minis_root="$test_root/minis"
 export OPENMINIS_ROOT="$minis_root"
@@ -37,10 +47,20 @@ test -s "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/openminis-bootstrap/SKILL.md"
 test -s "$minis_root/skills/openviking-memory/SKILL.md"
 test -s "$minis_root/skills/web-search/SKILL.md"
+test -s "$minis_root/skills/meeting-transcription/SKILL.md"
+test -s "$minis_root/skills/image-studio/SKILL.md"
+test -s "$minis_root/skills/video-generation/SKILL.md"
+test -s "$minis_root/skills/pdf-reader/SKILL.md"
+test -s "$minis_root/skills/file-download/SKILL.md"
 test -s "$minis_root/skills/openminis-agent/SKILL.md"
 test -s "$minis_root/config/openminis-bootstrap/manifest.json"
 grep -Fq 'add --name openviking --url $$OPENVIKING_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name websearch --url $$WEBSEARCH_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name meeting --url $$MEETING_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name image --url $$IMAGE_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name video --url $$VIDEO_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name pdfreader --url $$PDF_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name download --url $$DOWNLOAD_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 
 sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-update.log"
 find "$minis_root/backups" -mindepth 1 -maxdepth 1 -type d | grep -q .
@@ -51,6 +71,11 @@ grep -Fq 'PASS  skill web-search' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch MCP handshake' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch tool web_search' "$test_root/doctor.log"
 grep -Fq 'PASS  openviking tool memory_search' "$test_root/doctor.log"
+grep -Fq 'PASS  meeting tool start_transcription' "$test_root/doctor.log"
+grep -Fq 'PASS  image tool start_edit' "$test_root/doctor.log"
+grep -Fq 'PASS  video tool start_generation' "$test_root/doctor.log"
+grep -Fq 'PASS  pdfreader tool start_read' "$test_root/doctor.log"
+grep -Fq 'PASS  download tool start_download' "$test_root/doctor.log"
 
 strict_root="$test_root/strict-missing"
 export OPENMINIS_ROOT="$strict_root"

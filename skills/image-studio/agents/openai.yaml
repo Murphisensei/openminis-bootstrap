@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image Studio"
+  short_description: "Generate or edit images through the shared MCP"
+  default_prompt: "Use $image-studio to generate or edit the requested image."

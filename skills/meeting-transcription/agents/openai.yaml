@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meeting Transcription"
+  short_description: "Transcribe meeting audio and prepare notes"
+  default_prompt: "Use $meeting-transcription to transcribe this recording and prepare reliable meeting notes."

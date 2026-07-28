@@ -1,0 +1,4 @@
+interface:
+  display_name: "File Download"
+  short_description: "Download public files or media into OpenMinis"
+  default_prompt: "Use $file-download to safely fetch this public file into OpenMinis."

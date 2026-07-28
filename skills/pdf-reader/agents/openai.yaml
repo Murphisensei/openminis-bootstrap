@@ -1,0 +1,4 @@
+interface:
+  display_name: "PDF Reader"
+  short_description: "Extract text from local or scanned PDF files"
+  default_prompt: "Use $pdf-reader to read this PDF and return grounded results."

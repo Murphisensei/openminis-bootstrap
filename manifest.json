@@ -9,6 +9,11 @@
     "openminis-bootstrap",
     "openviking-memory",
     "web-search",
+    "meeting-transcription",
+    "image-studio",
+    "video-generation",
+    "pdf-reader",
+    "file-download",
     "openminis-agent"
   ],
   "profiles": {
@@ -52,6 +57,81 @@
         "vertical_search",
         "grounded_search",
         "provider_status",
+        "health"
+      ]
+    },
+    {
+      "name": "meeting",
+      "skill": "meeting-transcription",
+      "urlEnv": "MEETING_MCP_URL",
+      "tokenEnv": "MEETING_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet asynchronous meeting transcription; provider credentials stay on AWS KR.",
+      "requiredTools": [
+        "create_upload",
+        "start_transcription",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "image",
+      "skill": "image-studio",
+      "urlEnv": "IMAGE_MCP_URL",
+      "tokenEnv": "IMAGE_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet asynchronous image generation and editing; results return to attachments.",
+      "requiredTools": [
+        "create_upload",
+        "start_generation",
+        "start_edit",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "video",
+      "skill": "video-generation",
+      "urlEnv": "VIDEO_MCP_URL",
+      "tokenEnv": "VIDEO_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet asynchronous short-video generation; paid settings require confirmation.",
+      "requiredTools": [
+        "create_audio_upload",
+        "start_generation",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "pdfreader",
+      "skill": "pdf-reader",
+      "urlEnv": "PDF_MCP_URL",
+      "tokenEnv": "PDF_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet PDF extraction with local text parsing and OCR fallback.",
+      "requiredTools": [
+        "create_upload",
+        "start_read",
+        "job_status",
+        "cancel_job",
+        "health"
+      ]
+    },
+    {
+      "name": "download",
+      "skill": "file-download",
+      "urlEnv": "DOWNLOAD_MCP_URL",
+      "tokenEnv": "DOWNLOAD_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet bounded public-file and media downloader with SSRF controls.",
+      "requiredTools": [
+        "start_download",
+        "job_status",
+        "cancel_job",
         "health"
       ]
     }

@@ -1,6 +1,6 @@
 ---
 name: openminis-bootstrap
-description: Initialize, update, or repair Freddy's or Yurik's OpenMinis client by installing the selected Taco profile, common MCP-backed skills, shared OpenViking memory, Web Search, and safe diagnostics. Use for first setup, a new device, profile updates, common capability additions, or MCP troubleshooting.
+description: Initialize, update, or repair Freddy's or Yurik's OpenMinis client by installing the selected Taco profile, shared memory, Web Search, meeting, image, video, PDF, download Skills, their ready MCP links, and safe diagnostics. Use for first setup, a new device, profile updates, common capability additions, or MCP troubleshooting.
 ---
 
 # OpenMinis Bootstrap
@@ -36,6 +36,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 
 OpenMinis registers shell-created skills after the current turn becomes idle; this can take up to 60 seconds. If a newly installed skill is not visible immediately, finish the turn and start a new chat before retrying.
 
+Meeting, image, video, PDF, and download MCPs are optional until both environment variables for that
+capability exist. Their Skills are still installed so future Token rollout needs only environment
+configuration plus a normal Bootstrap update. Never substitute one service's Token for another.
+
 ## Update
 
 Update the active Taco SOUL, agent skill, common Skills, and any newly ready MCP entries:
@@ -54,7 +58,7 @@ confirming or intentionally changing the client identity.
 - Use only the public repository configured by `OPENMINIS_BOOTSTRAP_REPO`; default is `Murphisensei/openminis-bootstrap`.
 - Do not put secrets in the repository, command line, chat, logs, SOUL, or skill files.
 - Configure the MCP URL and bearer header with OpenMinis `$$VARNAME` placeholders.
-- Do not enable Tailscale Funnel. The memory endpoint is Tailnet-only.
+- Do not enable Tailscale Funnel. Every MCP endpoint is Tailnet-only.
 - Install only the selected profile's SOUL and `openminis-agent` plus common Skills declared in the
   manifest. Put future person-specific Skills or configuration in a separate GitHub repository;
   never add them to this shared bootstrap by default.

@@ -10,6 +10,17 @@ Required for common Tailnet MCP capabilities:
 - `WEBSEARCH_MCP_TOKEN`: bearer Token matching this person/iCloud group. Upstream search-provider
   keys stay on AWS KR and must never be copied into OpenMinis.
 
+Optional capability pairs (set both values to enable that MCP):
+
+- `MEETING_MCP_URL` and `MEETING_MCP_TOKEN`
+- `IMAGE_MCP_URL` and `IMAGE_MCP_TOKEN`
+- `VIDEO_MCP_URL` and `VIDEO_MCP_TOKEN`
+- `PDF_MCP_URL` and `PDF_MCP_TOKEN`
+- `DOWNLOAD_MCP_URL` and `DOWNLOAD_MCP_TOKEN`
+
+Every URL is the Tailnet-only HTTPS endpoint from that capability's Vaultwarden item. Every Token
+must match the selected person/iCloud group. Provider API keys remain on AWS KR.
+
 Optional repository controls, normally left unset:
 
 - `OPENMINIS_BOOTSTRAP_REPO`: defaults to `Murphisensei/openminis-bootstrap`.

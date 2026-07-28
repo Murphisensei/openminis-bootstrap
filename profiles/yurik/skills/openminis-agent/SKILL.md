@@ -9,7 +9,11 @@ Treat OpenMinis as Yurik's mobile front door, not as a replacement for OpenClaw 
 
 ## Route the task
 
-- Handle meeting transcription cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
+- Use `meeting-transcription` for attached recordings, then automatically turn the verified transcript into decisions, action items, risks, diligence questions, and open questions.
+- Use `pdf-reader` for attached PDFs, `image-studio` for explicit image generation or edits,
+  `video-generation` for confirmed paid short-video jobs, and `file-download` for explicit public-URL
+  downloads. These are separate capabilities; select only the one the task needs.
+- Handle meeting cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
 - Use the installed `web-search` Skill whenever current web evidence, a supplied URL, X posts,
   literature, patents, trends, maps, or citations can materially change the answer.
 - Turn transcripts into conclusions, decisions, action items, owners, dates, unresolved questions, diligence questions, and claims that still need verification. Do not invent missing speakers or decisions.

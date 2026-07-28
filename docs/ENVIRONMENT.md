@@ -8,8 +8,22 @@
 | `OPENVIKING_MCP_TOKEN` | 是 | 该iCloud/设备组专用的OpenViking Bearer Token |
 | `WEBSEARCH_MCP_URL` | 是 | Vaultwarden条目中的AWS KR Tailnet HTTPS MCP地址 |
 | `WEBSEARCH_MCP_TOKEN` | 是 | 该iCloud/设备组专用的Web Search Bearer Token |
+| `MEETING_MCP_URL` | 启用会议功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `MEETING_MCP_TOKEN` | 启用会议功能时 | 该iCloud/设备组专用的Meeting Bearer Token |
+| `IMAGE_MCP_URL` | 启用图片功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `IMAGE_MCP_TOKEN` | 启用图片功能时 | 该iCloud/设备组专用的Image Bearer Token |
+| `VIDEO_MCP_URL` | 启用视频功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `VIDEO_MCP_TOKEN` | 启用视频功能时 | 该iCloud/设备组专用的Video Bearer Token |
+| `PDF_MCP_URL` | 启用PDF功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `PDF_MCP_TOKEN` | 启用PDF功能时 | 该iCloud/设备组专用的PDF Bearer Token |
+| `DOWNLOAD_MCP_URL` | 启用下载功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
+| `DOWNLOAD_MCP_TOKEN` | 启用下载功能时 | 该iCloud/设备组专用的Download Bearer Token |
 
-同一iCloud下的设备使用同一组值；另一个iCloud使用不同Token，方便单独撤销和审计。Freddy设备填写Freddy Token，Yurik设备填写Yurik Token。不同OpenViking Token访问同一个全库，不创建个人数据孤岛。不要在客户端设置OpenViking account/user Header；Bridge固定连接现有共享数据面。Web Search的Brave、GLM、Tavily、Firecrawl、Jina、xAI、SerpAPI和Gemini等上游密钥只保留在AWS KR，绝不填写到OpenMinis。
+同一iCloud下的设备使用同一组值；另一个iCloud使用不同Token，方便单独撤销和审计。
+Freddy设备填写Freddy Token，Yurik设备填写Yurik Token。不同OpenViking Token访问同一个
+全库，不创建个人数据孤岛。不要在客户端设置OpenViking account/user Header；Bridge固定
+连接现有共享数据面。Web Search上游密钥和DashScope Key都只保留在AWS KR，绝不填写到
+OpenMinis。五个新增能力各自使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
 
 可选的仓库控制变量，通常不设置：
 

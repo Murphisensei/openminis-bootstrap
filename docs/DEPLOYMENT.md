@@ -6,7 +6,9 @@
 GitHub shared bootstrap ──> Freddy OpenMinis (Taco + Freddy Tokens) ──┐
                                                                      ├── Tailnet ──> SG memory MCP ──> shared OpenViking
                           └> Yurik OpenMinis (Taco + Yurik Tokens) ───┤
-                                                                     └── Tailnet ──> AWS KR Web Search MCP
+                                                                     └── Tailnet ──> AWS KR independent MCPs
+                                                                                     web / meeting / image
+                                                                                     video / PDF / download
 ```
 
 The public repository contains two non-secret client profiles, a manifest-driven installer, and common MCP-use Skills. Bridges, token databases, service configuration, and credentials stay on trusted servers. Tokens identify and authorize client entrances; they do not create separate OpenViking data silos. Person-specific capabilities live in separate GitHub repositories.
@@ -21,10 +23,15 @@ Before phone initialization, verify:
 - all authorized entrances use the existing shared `default/default` OpenViking data plane;
 - search returns the deduplicated union of native memory and active cross-host resources, while excluding same-host backup mirrors from the default roots;
 - the exposed MCP tools are exactly `memory_search`, `memory_read`, `memory_remember`, and `health`;
-- the AWS KR Web Search MCP exposes the tools declared in `manifest.json` and binds its application
-  only to loopback behind Tailnet HTTPS;
+- every AWS KR MCP exposes only the tools declared for it in `manifest.json`, runs as its own service
+  account, and binds its application only to loopback behind its dedicated Tailnet HTTPS port;
+- meeting, image, video, and PDF provider credentials exist only in root-readable AWS KR service
+  configuration; the download MCP has no provider credential;
+- upload and artifact routes require the same service-specific bearer Token, contain no Token in
+  their URL, scope every object to the authenticated principal, and expire temporary data;
+- download rejects private/reserved destinations and enforces file-size bounds;
 - missing and invalid Tokens receive 401;
-- Tailscale Serve exposes a dedicated private HTTPS port and Funnel is off.
+- Tailscale Serve exposes dedicated private HTTPS ports and Funnel is off for all of them.
 
 ## OpenMinis initialization
 
@@ -39,9 +46,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 ```
 
    Use `--profile yurik` for Yurik's iCloud/device group.
-5. Verify the doctor reports the expected profile, every managed Skill, both MCP handshakes, and all
-   required tools. Then verify a known shared-library project can be searched/read and a current web
-   query returns cited results.
+5. Verify the doctor reports the expected profile, every managed Skill, both required MCP
+   handshakes, every configured optional MCP handshake, and all declared tools. Then verify a known
+   shared-library project, a current web query, and one non-billable health call for each newly
+   configured capability. Run a paid generation only when the user requests it.
 
 ## Updates and rollback
 

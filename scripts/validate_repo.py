@@ -6,7 +6,16 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED_COMMON_SKILLS = {"openminis-bootstrap", "openviking-memory", "web-search"}
+REQUIRED_COMMON_SKILLS = {
+    "openminis-bootstrap",
+    "openviking-memory",
+    "web-search",
+    "meeting-transcription",
+    "image-studio",
+    "video-generation",
+    "pdf-reader",
+    "file-download",
+}
 EXPECTED_PROFILES = {"freddy", "yurik"}
 
 
@@ -70,8 +79,9 @@ def main() -> None:
     if not REQUIRED_COMMON_SKILLS.issubset(managed):
         fail(f"required common skills missing: {sorted(REQUIRED_COMMON_SKILLS - managed)}")
     mcp_names = {server["name"] for server in manifest["mcpServers"]}
-    if not {"openviking", "websearch"}.issubset(mcp_names):
-        fail("manifest must contain openviking and websearch MCP servers")
+    expected_mcp = {"openviking", "websearch", "meeting", "image", "video", "pdfreader", "download"}
+    if not expected_mcp.issubset(mcp_names):
+        fail(f"manifest MCP servers missing: {sorted(expected_mcp - mcp_names)}")
 
     profiles = manifest.get("profiles", {})
     if set(profiles) != EXPECTED_PROFILES:
@@ -126,6 +136,8 @@ def main() -> None:
 
     for script in (ROOT / "skills").glob("*/scripts/*.sh"):
         subprocess.run(["sh", "-n", str(script)], check=True)
+    for script in (ROOT / "skills").glob("*/scripts/*.py"):
+        subprocess.run([sys.executable, "-m", "py_compile", str(script)], check=True)
 
     # Build signatures from fragments so the scanner does not flag its own
     # source while still scanning every repository file, including this one.

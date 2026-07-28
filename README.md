@@ -2,7 +2,9 @@
 
 这个公开仓库为 Freddy 和 Yurik 分别初始化 OpenMinis。两边的助手都叫 **Taco**，但使用不同的 SOUL、移动端 Agent Skill 和每项 MCP 的独立 Bearer Token。
 
-两个入口访问同一个 OpenViking 全库和同一套 AWS KR Web Search 能力。Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔离的空记忆池。
+两个入口访问同一个 OpenViking 全库和同一套 AWS KR 共用能力。每项能力保持独立 MCP
+与独立 Skill：Web Search、会议转录、图片生成/编辑、短视频生成、PDF 读取和文件下载。
+Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔离的空记忆池。
 
 仓库不包含密钥、Vaultwarden 标识、私人账号、Tailnet 主机名、内网地址或记忆正文，也不安装模型 Provider、远程执行工具或服务器专用 Skill。共用 MCP 与对应基础 Skill 由 manifest 管理；个人专属能力放在单独 GitHub 仓库中。
 
@@ -13,6 +15,8 @@
    - `OPENVIKING_MCP_TOKEN`：必须使用这个人的 Vaultwarden Token
    - `WEBSEARCH_MCP_URL`
    - `WEBSEARCH_MCP_TOKEN`：必须使用这个人的 Vaultwarden Token
+   - 已启用时，再分别添加 `MEETING_MCP_URL/TOKEN`、`IMAGE_MCP_URL/TOKEN`、
+     `VIDEO_MCP_URL/TOKEN`、`PDF_MCP_URL/TOKEN`、`DOWNLOAD_MCP_URL/TOKEN`
 2. 在 Skills 页面导入：
 
    `https://github.com/Murphisensei/openminis-bootstrap/blob/main/skills/openminis-bootstrap/SKILL.md`
@@ -35,6 +39,11 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --co
 - `/var/minis/skills/openminis-agent`
 - `/var/minis/skills/openviking-memory`
 - `/var/minis/skills/web-search`
+- `/var/minis/skills/meeting-transcription`
+- `/var/minis/skills/image-studio`
+- `/var/minis/skills/video-generation`
+- `/var/minis/skills/pdf-reader`
+- `/var/minis/skills/file-download`
 - `/var/minis/skills/openminis-bootstrap`
 
 原文件会先备份到 `/var/minis/backups/openminis-bootstrap-TIMESTAMP-PID`。SOUL 会由 OpenMinis 的 iCloud 机制在同一 iCloud 设备组内同步；两个不同 iCloud 需要分别执行一次对应 Bootstrap。
@@ -50,6 +59,8 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh && sh /var/minis/ski
 如果设备安装的是旧版、尚未支持 `--profile`，先重新导入上面的 Bootstrap URL；或者先运行一次旧的 `install.sh` 更新脚本，再执行对应的首次初始化命令。
 
 新的共用 MCP 必须同时提供对应 Skill，并登记到 manifest；Bootstrap 会统一安装和检查。
+当前新增五项设为可选：变量成对存在时自动注册并严格检查，未发放该人的 Token 时则明确
+显示为“optional MCP is not configured”，不会阻断已有功能更新。
 Freddy 或 Yurik 的个性化 Skill/配置使用单独 GitHub 仓库，通过对应 `SKILL.md` URL 额外导入，不加入这个共享 Bootstrap。
 
 ## 两套 Taco 的定位

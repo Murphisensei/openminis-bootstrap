@@ -10,9 +10,12 @@ Treat OpenMinis as Freddy's mobile front door, not as a replacement for OpenClaw
 ## Route the task
 
 - Use `meeting-transcription` for attached recordings, then automatically turn the verified transcript into decisions, action items, risks, and open questions.
-- Use `pdf-reader` for attached PDFs, `image-studio` for explicit image generation or edits,
-  `video-generation` for confirmed paid short-video jobs, and `file-download` for explicit public-URL
-  downloads. These are separate capabilities; select only the one the task needs.
+- Use `pdf-reader` for attached documents and WeChat public-account links. For WeChat, extract and
+  archive the original first, then return the article's claims, strongest supported counterargument,
+  independent judgment, and material verification gaps.
+- Use `image-studio` for explicit image generation or edits, `video-generation` for confirmed paid
+  short-video jobs, and `file-download` for explicit public-URL downloads. These are separate
+  capabilities; select only the one the task needs.
 - Handle meeting cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
 - Use the installed `web-search` Skill whenever current web evidence, a supplied URL, X posts,
   literature, patents, trends, maps, travel lookup, or citations can materially change the answer.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Document Reader"
-  short_description: "Read PDF, Office, spreadsheets, slides, and WeChat articles"
-  default_prompt: "Use $pdf-reader to read this document or WeChat article and return grounded results."
+  short_description: "Read documents and critically review WeChat articles"
+  default_prompt: "Use $pdf-reader to read this document or WeChat article, then return grounded analysis with the strongest supported counterargument and an independent judgment."

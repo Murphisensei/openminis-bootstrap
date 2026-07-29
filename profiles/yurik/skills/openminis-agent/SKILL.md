@@ -9,11 +9,13 @@ Treat OpenMinis as Yurik's mobile front door, not as a replacement for OpenClaw 
 
 ## Route the task
 
+- **Highest-priority URL route:** when the input contains `mp.weixin.qq.com` or clearly refers to a
+  WeChat public-account article, use `wechat-article` before composing any substantive reply. Its
+  `WECHAT_SOURCE_READY` gate must complete through the private `pdfreader` MCP; a preview, snippet,
+  title, prior knowledge, or Web Search result is never a substitute. If extraction fails, say so
+  instead of summarizing the article.
 - Use `meeting-transcription` for attached recordings, then automatically turn the verified transcript into decisions, action items, risks, diligence questions, and open questions.
-- Use `pdf-reader` for attached documents. Always route an `mp.weixin.qq.com` URL or WeChat
-  public-account article to `wechat-article`; extract and archive the original through its private
-  MCP before returning claims, strongest supported counterargument, independent judgment, and
-  material diligence gaps.
+- Use `pdf-reader` for attached documents. It is not the router for WeChat public-account URLs.
 - Use `image-studio` for explicit image generation or edits, `video-generation` for confirmed paid
   short-video jobs, and `file-download` for explicit public-URL downloads. These are separate
   capabilities; select only the one the task needs.

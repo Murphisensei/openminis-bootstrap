@@ -1,6 +1,6 @@
 ---
 name: wechat-article
-description: Always use for any mp.weixin.qq.com URL, WeChat public-account article, 微信公众号文章, 公众号链接, or requests to read, summarize, analyze, verify, or critique a WeChat article. Hard-route the article body through the private pdfreader MCP before answering; use web-search only afterward for external verification.
+description: MUST use for every mp.weixin.qq.com URL, 微信公众号文章, 公众号链接, or request to read, summarize, analyze, verify, or critique one. Before any substantive reply, call the private pdfreader MCP, wait for its grounded Markdown artifact, and read that artifact. Never answer from a link preview, snippet, or model memory; use web-search only afterward for external verification.
 ---
 
 # WeChat Article
@@ -8,6 +8,21 @@ description: Always use for any mp.weixin.qq.com URL, WeChat public-account arti
 Use this Skill as the mandatory entry point for WeChat public-account articles. The existing
 `pdfreader` MCP fetches the source, creates a grounded Markdown artifact, preserves retrievable
 images, and archives the source to the authenticated person's Obsidian collection.
+
+## Non-negotiable execution gate
+
+When the input contains a WeChat public-account URL or clearly asks about a WeChat article:
+
+1. The first tool action must be `mcp_job.py wechat-read-start` with the exact supplied URL.
+2. Poll the returned job as service `pdf` until it returns a grounded Markdown artifact or a
+   terminal error. Do not write a provisional summary while the job is pending.
+3. Open and read the returned `minis://workspace/...` artifact. Only then may the answer make claims
+   about the article. Treat this completed sequence as the `WECHAT_SOURCE_READY` gate.
+4. If any step fails, state that the article body was not read and give the smallest useful retry
+   action. Do not substitute a link card, search snippet, cached copy, guessed title, or memory.
+
+This gate applies even when the user sends only the URL, says “看看”, or immediately asks a factual
+question about the article. A normal-looking URL preview is not evidence that the source was read.
 
 ## Hard routing rules
 

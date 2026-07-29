@@ -59,10 +59,18 @@ test -s "$minis_root/skills/image-studio/SKILL.md"
 test -s "$minis_root/skills/video-generation/SKILL.md"
 test -s "$minis_root/skills/pdf-reader/SKILL.md"
 test -s "$minis_root/skills/wechat-article/SKILL.md"
-grep -Fq 'Always use for any mp.weixin.qq.com URL' "$minis_root/skills/wechat-article/SKILL.md"
+grep -Fq 'MUST use for every mp.weixin.qq.com URL' "$minis_root/skills/wechat-article/SKILL.md"
 grep -Fq 'mcp_job.py wechat-read-start' "$minis_root/skills/wechat-article/SKILL.md"
+grep -Fq 'WECHAT_SOURCE_READY' "$minis_root/skills/wechat-article/SKILL.md"
+grep -Fq 'Do not handle a WeChat article inside this general document Skill' "$minis_root/skills/pdf-reader/SKILL.md"
+if grep -Fq 'mcp_job.py wechat-read-start' "$minis_root/skills/pdf-reader/SKILL.md"; then
+  printf '%s\n' 'pdf-reader unexpectedly duplicates the WeChat execution flow' >&2
+  exit 1
+fi
 grep -Fq 'always route it to wechat-article first' "$minis_root/skills/web-search/SKILL.md"
-grep -Fq 'Always route an `mp.weixin.qq.com` URL' "$minis_root/skills/openminis-agent/SKILL.md"
+grep -Fq 'Highest-priority URL route' "$minis_root/skills/openminis-agent/SKILL.md"
+grep -Fq 'WECHAT_SOURCE_READY' "$minis_root/skills/openminis-agent/SKILL.md"
+grep -Fq '第一项工具动作必须使用 `wechat-article`' "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/file-download/SKILL.md"
 test -s "$minis_root/skills/dashi/SKILL.md"
 test -s "$minis_root/skills/openminis-agent/SKILL.md"

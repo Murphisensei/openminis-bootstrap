@@ -115,6 +115,24 @@ def main() -> None:
         if len(frontmatter["description"]) > 1024:
             fail(f"description too long for {name}")
 
+    _, wechat_body = parse_frontmatter(ROOT / "skills" / "wechat-article" / "SKILL.md")
+    for marker in (
+        "mcp_job.py wechat-read-start",
+        "WECHAT_SOURCE_READY",
+        "first tool action",
+        "Do not write a provisional summary",
+    ):
+        if marker not in wechat_body:
+            fail(f"wechat-article route gate is missing: {marker}")
+    _, pdf_body = parse_frontmatter(ROOT / "skills" / "pdf-reader" / "SKILL.md")
+    if "mcp_job.py wechat-read-start" in pdf_body:
+        fail("wechat execution flow must have one owner: wechat-article, not pdf-reader")
+    if "$wechat-article" not in pdf_body:
+        fail("pdf-reader must hand WeChat URLs to wechat-article")
+    _, web_body = parse_frontmatter(ROOT / "skills" / "web-search" / "SKILL.md")
+    if "Hard exclusion" not in web_body or "$wechat-article" not in web_body:
+        fail("web-search must exclude WeChat article-body fetching")
+
     soul_counts: dict[str, int] = {}
     for profile in sorted(EXPECTED_PROFILES):
         config = profiles[profile]
@@ -136,14 +154,18 @@ def main() -> None:
         token_count = soul_token_count(soul_body.strip())
         if token_count > 2000:
             fail(f"{profile} SOUL exceeds OpenMinis limit: {token_count}/2000")
+        if "第一项工具动作必须使用 `wechat-article`" not in soul_body:
+            fail(f"{profile} SOUL is missing the WeChat MCP route gate")
         soul_counts[profile] = token_count
 
         agent_path = ROOT / expected_agent / "SKILL.md"
-        agent_meta, _ = parse_frontmatter(agent_path)
+        agent_meta, agent_body = parse_frontmatter(agent_path)
         if set(agent_meta) != {"name", "description"}:
             fail(f"{profile} agent frontmatter must be name and description only")
         if agent_meta["name"] != "openminis-agent":
             fail(f"{profile} agent skill name mismatch")
+        if "Highest-priority URL route" not in agent_body or "WECHAT_SOURCE_READY" not in agent_body:
+            fail(f"{profile} agent is missing the WeChat route gate")
         if not (agent_path.parent / "agents" / "openai.yaml").is_file():
             fail(f"{profile} agent openai.yaml is missing")
 

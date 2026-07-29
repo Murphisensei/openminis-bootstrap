@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: Find and verify current web information through the websearch MCP. Use for latest facts or news, supplied URLs, source-backed answers, X/Twitter posts, scholarly literature, patents, Google Trends, maps, lightweight travel lookup, or any claim likely to have changed since model training.
+description: Find and verify current web information through the websearch MCP. Use for latest facts or news, non-WeChat supplied URLs, source-backed answers, X/Twitter posts, scholarly literature, patents, Google Trends, maps, lightweight travel lookup, or changed claims. Never fetch an mp.weixin.qq.com article body here; always route it to wechat-article first.
 ---
 
 # Web Search
@@ -15,10 +15,13 @@ If discovery is stale, run `minis-mcp-cli tools websearch --refresh` once.
 
 ## Route the request
 
+- **Hard exclusion:** any `mp.weixin.qq.com` URL or WeChat public-account article must first use
+  `$wechat-article`. Do not call `read_url` or search for its body. After that Skill returns grounded
+  source Markdown, Web Search may verify only decisive external claims when the request requires it.
 - Use `web_search` with `provider=auto` for general web research. Choose `quick` by default,
   `news` for recent events, and `deep` only for a focused question that still fits a mobile task.
-- Use `read_url` when the user supplies a URL or when an important search result must be read in
-  full. A search snippet is not proof that the page was read.
+- Use `read_url` when the user supplies a non-WeChat URL or when an important search result must be
+  read in full. A search snippet is not proof that the page was read.
 - Use `x_search` only for X/Twitter posts, accounts, threads, or social reaction.
 - Use `vertical_search` with `scholar`, `patents`, or `trends` for those exact source types.
 - Use `grounded_search` for Google Search synthesis or place-specific Maps questions. If it is

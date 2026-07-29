@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Article"
+  short_description: "Hard-route WeChat articles to the private reader MCP"
+  default_prompt: "Use $wechat-article to fetch, archive, and critically analyze this mp.weixin.qq.com article."

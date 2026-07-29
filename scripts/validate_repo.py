@@ -14,6 +14,7 @@ REQUIRED_COMMON_SKILLS = {
     "image-studio",
     "video-generation",
     "pdf-reader",
+    "wechat-article",
     "paperless",
     "file-download",
     "dashi",

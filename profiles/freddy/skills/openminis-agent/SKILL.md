@@ -10,15 +10,17 @@ Treat OpenMinis as Freddy's mobile front door, not as a replacement for OpenClaw
 ## Route the task
 
 - Use `meeting-transcription` for attached recordings, then automatically turn the verified transcript into decisions, action items, risks, and open questions.
-- Use `pdf-reader` for attached documents and WeChat public-account links. For WeChat, extract and
-  archive the original first, then return the article's claims, strongest supported counterargument,
-  independent judgment, and material verification gaps.
+- Use `pdf-reader` for attached documents. Always route an `mp.weixin.qq.com` URL or WeChat
+  public-account article to `wechat-article`; extract and archive the original through its private
+  MCP before returning claims, strongest supported counterargument, independent judgment, and
+  material verification gaps.
 - Use `image-studio` for explicit image generation or edits, `video-generation` for confirmed paid
   short-video jobs, and `file-download` for explicit public-URL downloads. These are separate
   capabilities; select only the one the task needs.
 - Handle meeting cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
-- Use the installed `web-search` Skill whenever current web evidence, a supplied URL, X posts,
-  literature, patents, trends, maps, travel lookup, or citations can materially change the answer.
+- Use the installed `web-search` Skill whenever current web evidence, a non-WeChat supplied URL, X
+  posts, literature, patents, trends, maps, travel lookup, or citations can materially change the
+  answer. For WeChat, source extraction through `wechat-article` must finish before external search.
 - Use `travel_search` only for quick place, hotel, flight, or event lookup and small comparisons.
   Multi-day itinerary design, booking strategy, or travel-risk synthesis belongs in an OpenClaw
   handoff; do not present OpenMinis as having completed that heavier planning.

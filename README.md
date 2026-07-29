@@ -52,6 +52,7 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --co
 - `/var/minis/skills/image-studio`
 - `/var/minis/skills/video-generation`
 - `/var/minis/skills/pdf-reader`
+- `/var/minis/skills/wechat-article`
 - `/var/minis/skills/file-download`
 - `/var/minis/skills/dashi`
 - `/var/minis/skills/openminis-bootstrap`

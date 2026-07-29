@@ -1,13 +1,14 @@
 ---
 name: pdf-reader
-description: Read and critically analyze PDF, Word, Excel, PowerPoint, text, CSV, HTML, and WeChat public-account articles through the private Document Reader MCP. Use for grounded document analysis, scanned-PDF OCR, spreadsheet range inspection, slide/notes extraction, or WeChat read-archive-review workflows with counterarguments and independent judgment.
+description: Read and critically analyze attached PDF, Word, Excel, PowerPoint, text, CSV, and HTML files through the private Document Reader MCP. Use for grounded document analysis, scanned-PDF OCR, spreadsheet range inspection, or slide and speaker-note extraction. Route mp.weixin.qq.com URLs to the dedicated wechat-article Skill.
 ---
 
 # Document Reader
 
-Use this Skill to convert an attached document or WeChat public-account article into a local,
-grounded Markdown artifact before answering. It keeps the existing `pdfreader` MCP name, URL, and
-token even though the service now handles more than PDF.
+Use this Skill to convert an attached document into a local, grounded Markdown artifact before
+answering. It keeps the existing `pdfreader` MCP name, URL, and token even though the service now
+handles more than PDF. The dedicated `$wechat-article` Skill is the mandatory router for WeChat
+public-account URLs and uses this same MCP.
 
 ## Local files
 
@@ -126,8 +127,3 @@ explicitly confirmed analysis-note workflow actually writes it.
 - Text/CSV/HTML: up to 32 MiB; normalized output is bounded to 4 million characters.
 - WeChat URL fetching accepts only the official article host and approved image CDN hosts.
 - Never send private attachments to Web Search or a public URL.
-
-interface:
-  display_name: "Document Reader"
-  short_description: "Read documents and critically review WeChat articles"
-  default_prompt: "Use $pdf-reader to read this document or WeChat article, then return grounded analysis with the strongest supported counterargument and an independent judgment."

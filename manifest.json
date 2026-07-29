@@ -130,10 +130,12 @@
       "urlEnv": "PDF_MCP_URL",
       "tokenEnv": "PDF_MCP_TOKEN",
       "required": false,
-      "note": "Tailnet PDF extraction with local text parsing and OCR fallback.",
+      "note": "Tailnet PDF/Office/document extraction, scoped Excel reading, and person-routed WeChat-to-Obsidian archival.",
       "requiredTools": [
         "create_upload",
         "start_read",
+        "start_wechat_read",
+        "wechat_archive_status",
         "job_status",
         "cancel_job",
         "health"

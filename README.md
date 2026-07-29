@@ -3,7 +3,7 @@
 这个公开仓库为 Freddy 和 Yurik 分别初始化 OpenMinis。两边的助手都叫 **Taco**，但使用不同的 SOUL、移动端 Agent Skill 和每项 MCP 的独立 Bearer Token。
 
 两个入口访问同一个 OpenViking 全库和同一套 AWS KR 共用能力。每项能力保持独立 MCP
-与独立 Skill：Web Search、会议转录、图片生成/编辑、短视频生成、PDF 读取、文件下载和
+与独立 Skill：Web Search、会议转录、图片生成/编辑、短视频生成、文档/公众号读取、文件下载和
 Dashi 传统术数。Dashi 的 Freddy/Yurik 出生档案只保存在 AWS KR 服务端私有文件中。
 Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔离的空记忆池。
 

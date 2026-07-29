@@ -25,7 +25,7 @@ Before phone initialization, verify:
 - the exposed MCP tools are exactly `memory_search`, `memory_read`, `memory_remember`, and `health`;
 - every AWS KR MCP exposes only the tools declared for it in `manifest.json`, runs as its own service
   account, and binds its application only to loopback behind its dedicated Tailnet HTTPS port;
-- meeting, image, video, and PDF provider credentials exist only in root-readable AWS KR service
+- meeting, image, video, and Document Reader provider credentials exist only in root-readable AWS KR service
   configuration; the download MCP has no provider credential;
 - Dashi's Freddy/Yurik birth profiles exist only in its root-managed AWS KR config file, are read
   by exact subject ID, and are absent from GitHub, OpenViking search, MCP status, and client output;

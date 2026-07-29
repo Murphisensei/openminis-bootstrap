@@ -30,7 +30,8 @@ case "$command" in
         printf '%s\n' 'create_audio_upload start_generation job_status cancel_job health'
         ;;
       pdfreader)
-        printf '%s\n' 'create_upload start_read job_status cancel_job health'
+        printf '%s\n' \
+          'create_upload start_read start_wechat_read wechat_archive_status job_status cancel_job health'
         ;;
       download)
         printf '%s\n' 'start_download job_status cancel_job health'

@@ -1,6 +1,6 @@
 ---
 name: openminis-bootstrap
-description: Initialize, update, or repair Freddy's or Yurik's OpenMinis client by installing the selected Taco profile, shared memory, Web Search, meeting, image, video, PDF, download Skills, their ready MCP links, and safe diagnostics. Use for first setup, a new device, profile updates, common capability additions, or MCP troubleshooting.
+description: Initialize, update, or repair Freddy's or Yurik's OpenMinis client by installing the selected Taco profile, shared memory, Web Search, meeting, image, video, document reader, download Skills, their ready MCP links, and safe diagnostics. Use for first setup, a new device, profile updates, common capability additions, or MCP troubleshooting.
 ---
 
 # OpenMinis Bootstrap
@@ -40,7 +40,7 @@ dependency but never installs system packages itself.
 
 OpenMinis registers shell-created skills after the current turn becomes idle; this can take up to 60 seconds. If a newly installed skill is not visible immediately, finish the turn and start a new chat before retrying.
 
-Meeting, image, video, PDF, and download MCPs are optional until both environment variables for that
+Meeting, image, video, Document Reader, and download MCPs are optional until both environment variables for that
 capability exist. Their Skills are still installed so future Token rollout needs only environment
 configuration plus a normal Bootstrap update. Never substitute one service's Token for another.
 

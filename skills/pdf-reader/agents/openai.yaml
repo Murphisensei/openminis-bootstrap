@@ -1,4 +1,4 @@
 interface:
-  display_name: "PDF Reader"
-  short_description: "Extract text from local or scanned PDF files"
-  default_prompt: "Use $pdf-reader to read this PDF and return grounded results."
+  display_name: "Document Reader"
+  short_description: "Read PDF, Office, spreadsheets, slides, and WeChat articles"
+  default_prompt: "Use $pdf-reader to read this document or WeChat article and return grounded results."

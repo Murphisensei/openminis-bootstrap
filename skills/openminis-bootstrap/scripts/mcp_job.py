@@ -405,6 +405,19 @@ def build_parser() -> argparse.ArgumentParser:
     pdf.add_argument("file")
     pdf.add_argument("--mode", choices=("auto", "local", "ocr"), default="auto")
 
+    document = sub.add_parser("document-start")
+    document.add_argument("file")
+    document.add_argument("--mode", choices=("auto", "local", "ocr"), default="auto")
+    document.add_argument("--sheet", default="")
+    document.add_argument("--range", dest="cell_range", default="")
+    document.add_argument("--max-rows", type=int, choices=range(1, 5001), default=500)
+    document.add_argument("--max-columns", type=int, choices=range(1, 201), default=50)
+    document.add_argument("--no-formulas", action="store_true")
+    document.add_argument("--no-notes", action="store_true")
+
+    wechat = sub.add_parser("wechat-read-start")
+    wechat.add_argument("url")
+
     paperless_prepare = sub.add_parser("paperless-prepare-start")
     paperless_prepare.add_argument("file")
     paperless_prepare.add_argument("--text")
@@ -528,14 +541,33 @@ def main() -> None:
             },
         )
         emit(started("video", result))
-    elif args.command == "pdf-start":
+    elif args.command in {"pdf-start", "document-start"}:
         path = local_input(args.file)
         upload_id = upload("pdf", path, "create_upload")
+        arguments: dict[str, Any] = {
+            "upload_id": upload_id,
+            "filename": path.name,
+            "mode": args.mode,
+        }
+        if args.command == "document-start":
+            arguments.update(
+                {
+                    "sheet": args.sheet,
+                    "cell_range": args.cell_range,
+                    "max_rows": args.max_rows,
+                    "max_columns": args.max_columns,
+                    "include_formulas": not args.no_formulas,
+                    "include_notes": not args.no_notes,
+                }
+            )
         result = mcp_call(
             "pdf",
             "start_read",
-            {"upload_id": upload_id, "filename": path.name, "mode": args.mode},
+            arguments,
         )
+        emit(started("pdf", result))
+    elif args.command == "wechat-read-start":
+        result = mcp_call("pdf", "start_wechat_read", {"url": args.url})
         emit(started("pdf", result))
     elif args.command == "paperless-prepare-start":
         path = local_input(args.file)

@@ -14,8 +14,8 @@
 | `IMAGE_MCP_TOKEN` | 启用图片功能时 | 该iCloud/设备组专用的Image Bearer Token |
 | `VIDEO_MCP_URL` | 启用视频功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
 | `VIDEO_MCP_TOKEN` | 启用视频功能时 | 该iCloud/设备组专用的Video Bearer Token |
-| `PDF_MCP_URL` | 启用PDF功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
-| `PDF_MCP_TOKEN` | 启用PDF功能时 | 该iCloud/设备组专用的PDF Bearer Token |
+| `PDF_MCP_URL` | 启用文档读取功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址；沿用原PDF地址 |
+| `PDF_MCP_TOKEN` | 启用文档读取功能时 | 该iCloud/设备组专用的Document Reader Bearer Token；沿用原PDF Token |
 | `PAPERLESS_MCP_URL` | 启用Paperless时 | Vaultwarden条目中的Oracle Tailnet HTTPS地址 |
 | `PAPERLESS_MCP_TOKEN` | 启用Paperless时 | Freddy或Yurik专用的Paperless MCP Bearer Token |
 | `DOWNLOAD_MCP_URL` | 启用下载功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |

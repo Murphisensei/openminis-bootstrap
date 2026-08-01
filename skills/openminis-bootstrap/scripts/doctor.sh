@@ -74,11 +74,26 @@ else
   fail 'skill openminis-agent is missing'
 fi
 
-if [ -s "$minis_root/memory/SOUL.md" ] && \
-   grep -q '^name: "Taco"$' "$minis_root/memory/SOUL.md"; then
-  pass 'Taco SOUL'
+installed_soul="$minis_root/memory/SOUL.md"
+soul_native_state="$minis_root/config/openminis-bootstrap/soul-native.sha256"
+if [ -s "$installed_soul" ] && \
+   grep -q '^name: "Taco"$' "$installed_soul" && \
+   [ -s "$soul_native_state" ]; then
+  expected_soul_hash="$(sed -n '1p' "$soul_native_state")"
+  actual_soul_hash="$(sha256sum "$installed_soul" | awk '{print $1}')"
+  case "$expected_soul_hash" in
+    *[!0-9a-f]*|'') fail 'SOUL native-save state is invalid' ;;
+    *)
+      if [ "${#expected_soul_hash}" -eq 64 ] && \
+         [ "$actual_soul_hash" = "$expected_soul_hash" ]; then
+        pass 'Taco SOUL content and native-save state'
+      else
+        fail 'Taco SOUL is stale or was not saved through the OpenMinis native API'
+      fi
+      ;;
+  esac
 else
-  fail 'Taco SOUL is missing or invalid'
+  fail 'Taco SOUL or native-save state is missing; rerun install.sh'
 fi
 
 if [ "$manifest_ok" -eq 1 ]; then

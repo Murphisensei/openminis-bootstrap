@@ -134,6 +134,8 @@ fi
 profile_root="$source_root/profiles/$profile"
 test -f "$profile_root/SOUL.md"
 test -f "$profile_root/skills/openminis-agent/SKILL.md"
+soul_tool="$source_root/skills/openminis-bootstrap/scripts/soul_cli.py"
+test -f "$soul_tool"
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 backup_root="$minis_root/backups/openminis-bootstrap-$timestamp-$$"
@@ -144,6 +146,61 @@ mkdir -p \
   "$backup_root/skills" \
   "$backup_root/memory" \
   "$backup_root/config"
+
+soul_destination="$minis_root/memory/SOUL.md"
+soul_native_state="$profile_state_dir/soul-native.sha256"
+expected_soul_hash="$(sha256sum "$profile_root/SOUL.md" | awk '{print $1}')"
+actual_soul_hash=""
+saved_soul_hash=""
+if [ -f "$soul_destination" ]; then
+  cp "$soul_destination" "$backup_root/memory/SOUL.md"
+  actual_soul_hash="$(sha256sum "$soul_destination" | awk '{print $1}')"
+fi
+if [ -s "$soul_native_state" ]; then
+  cp "$soul_native_state" "$backup_root/config/soul-native.sha256"
+  saved_soul_hash="$(sed -n '1p' "$soul_native_state")"
+fi
+
+if [ "$actual_soul_hash" != "$expected_soul_hash" ] || \
+   [ "$saved_soul_hash" != "$expected_soul_hash" ]; then
+  if ! command -v minis-config >/dev/null 2>&1; then
+    printf '%s\n' \
+      'minis-config is required for a durable SOUL update. Update OpenMinis and rerun.' >&2
+    exit 1
+  fi
+  soul_batch="$tmp/soul-batch.json"
+  python3 "$soul_tool" prepare-batch "$profile_root/SOUL.md" "$soul_batch"
+  printf '%s\n' \
+    'Approve the OpenMinis SOUL confirmation sheet within 30 seconds.'
+  if minis-config set-batch \
+      --actor user \
+      --caption "Install Taco SOUL for $profile" \
+      --quiet < "$soul_batch"; then
+    :
+  else
+    native_status="$?"
+    case "$native_status" in
+      124) native_reason='confirmation timed out' ;;
+      125) native_reason='confirmation was rejected' ;;
+      126) native_reason='minis-config permission is disabled' ;;
+      *) native_reason="native save failed with exit code $native_status" ;;
+    esac
+    printf 'SOUL native save failed: %s.\n' "$native_reason" >&2
+    printf '%s\n' \
+      'Enable Settings > Permissions > Allow minis-config, rerun, and approve the confirmation sheet.' >&2
+    exit 1
+  fi
+  actual_soul_hash="$(sha256sum "$soul_destination" | awk '{print $1}')"
+  if [ "$actual_soul_hash" != "$expected_soul_hash" ]; then
+    printf '%s\n' \
+      'OpenMinis native save completed but the installed SOUL hash is unexpected.' >&2
+    exit 1
+  fi
+  printf '%s\n' "$expected_soul_hash" > "$soul_native_state"
+  printf 'Saved Taco SOUL through OpenMinis native API for profile: %s\n' "$profile"
+else
+  printf 'Taco SOUL is already current for profile: %s\n' "$profile"
+fi
 
 installed=0
 install_skill() {
@@ -171,12 +228,6 @@ for skill_name in $core_skills; do
   install_skill "$skill_name" "$source_root/skills/$skill_name"
 done
 install_skill openminis-agent "$profile_root/skills/openminis-agent"
-
-soul_destination="$minis_root/memory/SOUL.md"
-if [ -f "$soul_destination" ]; then
-  cp "$soul_destination" "$backup_root/memory/SOUL.md"
-fi
-cp "$profile_root/SOUL.md" "$soul_destination"
 
 if [ -f "$profile_state" ]; then
   cp "$profile_state" "$backup_root/config/profile"

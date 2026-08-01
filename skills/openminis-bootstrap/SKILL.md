@@ -16,7 +16,9 @@ Tokens.
    `references/environment.md` for the exact list.
 2. Ask whether this iCloud/device group belongs to Freddy or Yurik. Never infer the profile from the Token.
 3. Install the selected identity and manifest-managed common Skills, then register every ready MCP
-   entry. For Freddy:
+   entry. The first SOUL install or any SOUL content change opens one native OpenMinis confirmation
+   sheet; ask the user to approve it within 30 seconds. This confirmation is required so OpenMinis
+   refreshes the running persona and queues the `SoulV2` record for iCloud. For Freddy:
 
 ```sh
 sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile freddy --configure-mcp
@@ -40,6 +42,11 @@ dependency but never installs system packages itself.
 
 OpenMinis registers shell-created skills after the current turn becomes idle; this can take up to 60 seconds. If a newly installed skill is not visible immediately, finish the turn and start a new chat before retrying.
 
+SOUL installation requires the official `minis-config` native offload and Settings → Permissions →
+Allow minis-config. Never replace it with a bare shell copy: a filesystem-only edit does not post
+the in-app persona refresh event or mark `SoulV2` dirty. A successful installer records the exact
+native-saved SOUL hash, and the doctor rejects stale or filesystem-only replacements.
+
 Meeting, image, video, Document Reader, and download MCPs are optional until both environment variables for that
 capability exist. Their Skills are still installed so future Token rollout needs only environment
 configuration plus a normal Bootstrap update. Never substitute one service's Token for another.
@@ -53,7 +60,8 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh
 ```
 
 The installer reuses the saved profile and backs up the previous SOUL, manifest, and managed Skill
-directories before copying. The manifest is the source of truth for shared Skills, MCP environment
+directories before updating. Unchanged SOUL content does not open another confirmation sheet. The
+manifest is the source of truth for shared Skills, MCP environment
 variables, server registration, and doctor tool checks. Use an explicit `--profile` only when
 confirming or intentionally changing the client identity.
 

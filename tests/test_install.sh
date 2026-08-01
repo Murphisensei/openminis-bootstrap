@@ -47,6 +47,8 @@ sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" \
   --profile freddy --configure-mcp > "$test_root/install-first.log"
 
 test -s "$minis_root/memory/SOUL.md"
+test -s "$minis_root/config/openminis-bootstrap/soul-native.sha256"
+cmp -s "$repo_root/profiles/freddy/SOUL.md" "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/openminis-bootstrap/SKILL.md"
 test -s "$minis_root/skills/openviking-memory/SKILL.md"
 test -s "$minis_root/skills/web-search/SKILL.md"
@@ -83,9 +85,12 @@ grep -Fq 'add --name video --url $$VIDEO_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name pdfreader --url $$PDF_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name download --url $$DOWNLOAD_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name dashi --url $$DASHI_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'minis-config set-batch soul.name soul.style soul.lang soul.body' \
+  "$BOOTSTRAP_TEST_CALL_LOG"
 
 sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-update.log"
 find "$minis_root/backups" -mindepth 1 -maxdepth 1 -type d | grep -q .
+test "$(grep -Fc 'minis-config set-batch' "$BOOTSTRAP_TEST_CALL_LOG")" -eq 1
 
 if ! sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
   --profile freddy > "$test_root/doctor.log"; then
@@ -107,6 +112,31 @@ grep -Fq 'PASS  pdfreader tool start_read' "$test_root/doctor.log"
 grep -Fq 'PASS  download tool start_download' "$test_root/doctor.log"
 grep -Fq 'PASS  dashi tool start_iching_reading' "$test_root/doctor.log"
 
+printf '%s\n' '# stale shell edit' >> "$minis_root/memory/SOUL.md"
+if sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
+  --profile freddy > "$test_root/doctor-stale.log"; then
+  printf '%s\n' 'doctor unexpectedly accepted a stale SOUL' >&2
+  exit 1
+fi
+grep -Fq 'FAIL  Taco SOUL is stale or was not saved through the OpenMinis native API' \
+  "$test_root/doctor-stale.log"
+sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-repair.log"
+cmp -s "$repo_root/profiles/freddy/SOUL.md" "$minis_root/memory/SOUL.md"
+test "$(grep -Fc 'minis-config set-batch' "$BOOTSTRAP_TEST_CALL_LOG")" -eq 2
+sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
+  --profile freddy > "$test_root/doctor-repaired.log"
+grep -Fq 'PASS  Taco SOUL content and native-save state' "$test_root/doctor-repaired.log"
+
+# Simulate a device upgraded from the filesystem-only installer: the SOUL
+# bytes are current, but there is no proof that SoulStore.save() ran.
+rm -f "$minis_root/config/openminis-bootstrap/soul-native.sha256"
+sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" > "$test_root/install-legacy-repair.log"
+test "$(grep -Fc 'minis-config set-batch' "$BOOTSTRAP_TEST_CALL_LOG")" -eq 3
+sh "$minis_root/skills/openminis-bootstrap/scripts/doctor.sh" \
+  --profile freddy > "$test_root/doctor-legacy-repaired.log"
+grep -Fq 'PASS  Taco SOUL content and native-save state' \
+  "$test_root/doctor-legacy-repaired.log"
+
 strict_root="$test_root/strict-missing"
 export OPENMINIS_ROOT="$strict_root"
 unset WEBSEARCH_MCP_TOKEN
@@ -116,5 +146,30 @@ if sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" \
   exit 1
 fi
 test ! -e "$strict_root"
+
+export WEBSEARCH_MCP_TOKEN=test-search-token
+native_fail_root="$test_root/native-fail"
+export OPENMINIS_ROOT="$native_fail_root"
+export BOOTSTRAP_TEST_MINIS_CONFIG_FAIL=1
+if sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" \
+  --profile freddy > "$test_root/native-fail.log" 2>&1; then
+  printf '%s\n' 'install unexpectedly accepted a failed native SOUL save' >&2
+  exit 1
+fi
+test ! -e "$native_fail_root/config/openminis-bootstrap/soul-native.sha256"
+test ! -e "$native_fail_root/skills/openminis-agent"
+grep -Fq 'SOUL native save failed: minis-config permission is disabled.' \
+  "$test_root/native-fail.log"
+unset BOOTSTRAP_TEST_MINIS_CONFIG_FAIL
+
+yurik_root="$test_root/yurik"
+export OPENMINIS_ROOT="$yurik_root"
+sh "$repo_root/skills/openminis-bootstrap/scripts/install.sh" \
+  --profile yurik > "$test_root/yurik-install.log"
+cmp -s "$repo_root/profiles/yurik/SOUL.md" "$yurik_root/memory/SOUL.md"
+sh "$yurik_root/skills/openminis-bootstrap/scripts/doctor.sh" \
+  --profile yurik > "$test_root/yurik-doctor.log"
+grep -Fq 'PASS  client profile yurik' "$test_root/yurik-doctor.log"
+grep -Fq 'PASS  Taco SOUL content and native-save state' "$test_root/yurik-doctor.log"
 
 printf '%s\n' 'PASS  manifest-driven install, update, MCP registration, and doctor'

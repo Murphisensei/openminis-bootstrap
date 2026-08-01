@@ -29,6 +29,11 @@ Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔
 sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile freddy --configure-mcp && sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 ```
 
+首次写入或以后 SOUL 内容有变化时，OpenMinis 会弹出一次原生设置确认；请在 30 秒内批准。
+这一步通过官方 `minis-config` 保存，负责刷新当前人格并把 `SoulV2` 放入 iCloud 同步队列。
+请先确认 **Settings → Permissions → Allow minis-config** 已开启。SOUL 没有变化时，后续更新
+不会重复弹窗。
+
 Yurik 的设备执行：
 
 ```sh
@@ -57,7 +62,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --co
 - `/var/minis/skills/dashi`
 - `/var/minis/skills/openminis-bootstrap`
 
-原文件会先备份到 `/var/minis/backups/openminis-bootstrap-TIMESTAMP-PID`。SOUL 会由 OpenMinis 的 iCloud 机制在同一 iCloud 设备组内同步；两个不同 iCloud 需要分别执行一次对应 Bootstrap。
+原文件会先备份到 `/var/minis/backups/openminis-bootstrap-TIMESTAMP-PID`。安装器不会再用裸
+`cp` 假定 SOUL 已同步，而是通过 OpenMinis 原生保存链路写入并记录完整哈希；doctor 会拒绝
+旧文件或绕过原生保存的文件。SOUL 随后由 OpenMinis 的 iCloud 机制在同一 iCloud 设备组内
+同步；两个不同 iCloud 需要分别执行一次对应 Bootstrap。
 
 ## 后续更新
 
@@ -68,6 +76,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh && sh /var/minis/ski
 ```
 
 如果设备安装的是旧版、尚未支持 `--profile`，先重新导入上面的 Bootstrap URL；或者先运行一次旧的 `install.sh` 更新脚本，再执行对应的首次初始化命令。
+
+从旧的“裸文件复制”版本升级时，旧脚本第一次运行只能更新脚本本身。最稳妥的迁移方式是
+重新导入上面的 Bootstrap URL；如果不重新导入，就连续运行两次 `install.sh`：第一次更新
+installer，第二次会弹出原生 SOUL 确认并建立可校验的 iCloud 同步状态。
 
 新的共用 MCP 必须同时提供对应 Skill，并登记到 manifest；Bootstrap 会统一安装和检查。
 当前新增六项设为可选：变量成对存在时自动注册并严格检查，未发放该人的 Token 时则明确

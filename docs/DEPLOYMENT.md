@@ -48,6 +48,10 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 ```
 
    Use `--profile yurik` for Yurik's iCloud/device group.
+   Enable Settings → Permissions → Allow minis-config first. On a first install or changed SOUL,
+   approve the single native SOUL confirmation sheet within 30 seconds. This write must pass
+   through `SoulStore.save()` so the running persona refreshes and `SoulV2` enters the iCloud
+   dirty queue; a bare shell copy is not an accepted deployment path.
 5. Verify the doctor reports the expected profile, every managed Skill, both required MCP
    handshakes, every configured optional MCP handshake, and all declared tools. Then verify a known
    shared-library project, a current web query, and one non-billable health call for each newly
@@ -58,4 +62,8 @@ sh /var/minis/skills/openminis-bootstrap/scripts/doctor.sh --profile freddy
 Run `install.sh` again to update the saved profile's SOUL, manifest-managed common Skills, and any
 newly ready MCP entries. Each run backs up previous managed content under
 `/var/minis/backups/openminis-bootstrap-TIMESTAMP-PID`. Independently installed personal Skills remain
-unchanged.
+unchanged. The installer stores the exact hash only after a successful native SOUL save; unchanged
+content takes the no-confirmation fast path, while the doctor rejects stale or filesystem-only
+SOUL replacements. A device upgrading from the older filesystem-only installer must either
+re-import the Bootstrap Skill before running it or run `install.sh` twice: the legacy first pass
+updates the installer, and the second pass performs the native SOUL save.

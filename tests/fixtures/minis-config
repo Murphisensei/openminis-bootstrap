@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+import json
+import os
+import sys
+from pathlib import Path
+
+
+def fail(message: str, code: int = 1) -> None:
+    print(message, file=sys.stderr)
+    raise SystemExit(code)
+
+
+args = sys.argv[1:]
+if not args or args[0] != "set-batch":
+    fail("unsupported minis-config fixture command")
+if os.environ.get("BOOTSTRAP_TEST_MINIS_CONFIG_FAIL") == "1":
+    fail("simulated minis-config rejection", 126)
+
+items = json.load(sys.stdin)
+values = {
+    item["path"]: json.loads(item["value_json"])
+    for item in items
+}
+expected_paths = {"soul.name", "soul.style", "soul.lang", "soul.body"}
+if set(values) != expected_paths:
+    fail("unexpected SOUL batch fields")
+
+destination = Path(os.environ["OPENMINIS_ROOT"]) / "memory" / "SOUL.md"
+destination.parent.mkdir(parents=True, exist_ok=True)
+content = (
+    "---\n"
+    f"name: {json.dumps(values['soul.name'], ensure_ascii=False)}\n"
+    f"style: {json.dumps(values['soul.style'], ensure_ascii=False)}\n"
+    f"lang: {json.dumps(values['soul.lang'], ensure_ascii=False)}\n"
+    "---\n\n"
+    f"{values['soul.body']}"
+)
+if not content.endswith("\n"):
+    content += "\n"
+destination.write_text(content, encoding="utf-8")
+
+with Path(os.environ["BOOTSTRAP_TEST_CALL_LOG"]).open("a", encoding="utf-8") as handle:
+    handle.write("minis-config set-batch soul.name soul.style soul.lang soul.body\n")
+
+print('{"ok":true}')

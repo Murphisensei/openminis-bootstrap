@@ -151,6 +151,8 @@ def main() -> None:
             fail(f"{profile} SOUL frontmatter must be name, style, and lang")
         if soul_meta["name"] != "Taco":
             fail(f"{profile} SOUL name must be Taco")
+        if soul_meta["lang"] not in {"auto", "zh", "en"}:
+            fail(f"{profile} SOUL lang must be auto, zh, or en")
         token_count = soul_token_count(soul_body.strip())
         if token_count > 2000:
             fail(f"{profile} SOUL exceeds OpenMinis limit: {token_count}/2000")
@@ -168,6 +170,18 @@ def main() -> None:
             fail(f"{profile} agent is missing the WeChat route gate")
         if not (agent_path.parent / "agents" / "openai.yaml").is_file():
             fail(f"{profile} agent openai.yaml is missing")
+
+    installer = (
+        ROOT / "skills" / "openminis-bootstrap" / "scripts" / "install.sh"
+    ).read_text(encoding="utf-8")
+    doctor = (
+        ROOT / "skills" / "openminis-bootstrap" / "scripts" / "doctor.sh"
+    ).read_text(encoding="utf-8")
+    for marker in ("minis-config set-batch", "soul-native.sha256", "soul_cli.py"):
+        if marker not in installer:
+            fail(f"installer is missing native SOUL synchronization marker: {marker}")
+    if "Taco SOUL content and native-save state" not in doctor:
+        fail("doctor must verify the full native-saved SOUL content hash")
 
     for script in (ROOT / "skills").glob("*/scripts/*.sh"):
         subprocess.run(["sh", "-n", str(script)], check=True)

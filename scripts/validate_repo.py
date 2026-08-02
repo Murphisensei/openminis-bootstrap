@@ -158,6 +158,8 @@ def main() -> None:
             fail(f"{profile} SOUL exceeds OpenMinis limit: {token_count}/2000")
         if "第一项工具动作必须使用 `wechat-article`" not in soul_body:
             fail(f"{profile} SOUL is missing the WeChat MCP route gate")
+        if "默认可以更自然、更丰富地使用贴合语义的 emoji" not in soul_body:
+            fail(f"{profile} SOUL is missing the chat-first emoji preference")
         soul_counts[profile] = token_count
 
         agent_path = ROOT / expected_agent / "SKILL.md"

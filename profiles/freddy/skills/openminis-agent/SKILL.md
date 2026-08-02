@@ -18,7 +18,9 @@ Treat OpenMinis as Freddy's mobile front door, not as a replacement for OpenClaw
 - Use `pdf-reader` for attached documents. It is not the router for WeChat public-account URLs.
 - Use `image-studio` for explicit image generation or edits, `video-generation` for confirmed paid
   short-video jobs, and `file-download` for explicit public-URL downloads. These are separate
-  capabilities; select only the one the task needs.
+  capabilities; select only the one the task needs. A download must remain on the private download
+  MCP through verified attachment return; never install a local downloader or request phone-side
+  browser cookies as a fallback.
 - Handle meeting cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
 - Use the installed `web-search` Skill whenever current web evidence, a non-WeChat supplied URL, X
   posts, literature, patents, trends, maps, travel lookup, or citations can materially change the

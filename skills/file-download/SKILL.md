@@ -28,6 +28,13 @@ Then reuse its job ID:
 python3 /var/minis/skills/openminis-bootstrap/scripts/mcp_job.py status download JOB_ID --wait-seconds 120
 ```
 
+The private MCP is the execution environment, including for Douyin and other media pages. Keep the
+job on the server until it either produces a verified artifact or returns a server-side error. Never
+install `curl`, `yt-dlp`, or another downloader inside OpenMinis as a fallback, and never ask the user
+to export browser cookies or place `cookies.txt` on the phone. For a transient media-session error,
+retry the same MCP workflow once; if it still fails, report that the private download service needs
+operator attention without proposing a local-tool workaround.
+
 Direct files are stored in `/var/minis/workspace`; playable media and extracted audio are stored in
 `/var/minis/attachments`. Return the resulting `minis://...` URL. Never claim success until the
 helper has verified size and SHA-256. Do not download copyrighted, paywalled, authenticated, or

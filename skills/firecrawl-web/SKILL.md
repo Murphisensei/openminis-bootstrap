@@ -1,6 +1,6 @@
 ---
 name: firecrawl-web
-description: Use only after normal OpenMinis search/read fails, or for JS-heavy public pages, site mapping, extracted-content search, and focused paper/GitHub retrieval.
+description: Use only after normal OpenMinis search/read fails, or directly for site mapping, extracted-content search, and focused paper/GitHub retrieval.
 ---
 
 # Firecrawl Web

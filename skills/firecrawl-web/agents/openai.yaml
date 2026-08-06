@@ -1,4 +1,4 @@
 interface:
   display_name: "Firecrawl Web"
   short_description: "Extract JS-heavy pages and map sites safely"
-  default_prompt: "Use $firecrawl-web only for a recorded extraction failure, JS-heavy public page, site mapping, extracted-content search, or focused paper/GitHub retrieval; never duplicate a successful normal search."
+  default_prompt: "Use $firecrawl-web only for a recorded JS/extraction failure, site mapping, extracted-content search, or focused paper/GitHub retrieval; never duplicate a successful normal search."

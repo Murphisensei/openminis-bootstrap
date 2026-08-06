@@ -7,7 +7,7 @@ GitHub shared bootstrap ──> Freddy OpenMinis (Taco + Freddy Tokens) ──�
                                                                      ├── Tailnet ──> SG memory MCP ──> shared OpenViking
                           └> Yurik OpenMinis (Taco + Yurik Tokens) ───┤
                                                                      └── Tailnet ──> AWS KR independent MCPs
-                                                                                     web / meeting / image
+                                                                                     web / Firecrawl / meeting / image
                                                                                      video / PDF / download / Dashi
 ```
 
@@ -25,6 +25,8 @@ Before phone initialization, verify:
 - the exposed MCP tools are exactly `memory_search`, `memory_read`, `memory_remember`, and `health`;
 - every AWS KR MCP exposes only the tools declared for it in `manifest.json`, runs as its own service
   account, and binds its application only to loopback behind its dedicated Tailnet HTTPS port;
+- the OpenMinis Firecrawl bridge validates a person-specific Token, never forwards that Authorization
+  header upstream, and exposes only the eight approved read-oriented Firecrawl tools plus `health`;
 - meeting, image, video, and Document Reader provider credentials exist only in root-readable AWS KR service
   configuration; the download MCP has no provider credential;
 - Dashi's Freddy/Yurik birth profiles exist only in its root-managed AWS KR config file, are read

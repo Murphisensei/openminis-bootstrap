@@ -28,6 +28,8 @@ export OPENVIKING_MCP_URL=https://memory.invalid/mcp
 export OPENVIKING_MCP_TOKEN=test-memory-token
 export WEBSEARCH_MCP_URL=https://search.invalid/mcp
 export WEBSEARCH_MCP_TOKEN=test-search-token
+export FIRECRAWL_MCP_URL=https://firecrawl.invalid/mcp
+export FIRECRAWL_MCP_TOKEN=test-firecrawl-token
 export MEETING_MCP_URL=https://meeting.invalid/mcp
 export MEETING_MCP_TOKEN=test-meeting-token
 export IMAGE_MCP_URL=https://image.invalid/mcp
@@ -52,6 +54,7 @@ cmp -s "$repo_root/profiles/freddy/SOUL.md" "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/openminis-bootstrap/SKILL.md"
 test -s "$minis_root/skills/openviking-memory/SKILL.md"
 test -s "$minis_root/skills/web-search/SKILL.md"
+test -s "$minis_root/skills/firecrawl-web/SKILL.md"
 test -s "$minis_root/skills/finance-lookup/SKILL.md"
 test -s "$minis_root/skills/biomedical-lookup/SKILL.md"
 test -s "$minis_root/skills/travel-lookup/SKILL.md"
@@ -79,6 +82,7 @@ test -s "$minis_root/skills/openminis-agent/SKILL.md"
 test -s "$minis_root/config/openminis-bootstrap/manifest.json"
 grep -Fq 'add --name openviking --url $$OPENVIKING_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name websearch --url $$WEBSEARCH_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
+grep -Fq 'add --name firecrawl --url $$FIRECRAWL_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name meeting --url $$MEETING_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name image --url $$IMAGE_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
 grep -Fq 'add --name video --url $$VIDEO_MCP_URL' "$BOOTSTRAP_TEST_CALL_LOG"
@@ -104,6 +108,9 @@ grep -Fq 'PASS  websearch tool web_search' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch tool market_data' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch tool drug_search' "$test_root/doctor.log"
 grep -Fq 'PASS  websearch tool aviation_search' "$test_root/doctor.log"
+grep -Fq 'PASS  firecrawl MCP handshake' "$test_root/doctor.log"
+grep -Fq 'PASS  firecrawl tool firecrawl_scrape' "$test_root/doctor.log"
+grep -Fq 'PASS  firecrawl tool firecrawl_research_search_github' "$test_root/doctor.log"
 grep -Fq 'PASS  openviking tool memory_search' "$test_root/doctor.log"
 grep -Fq 'PASS  meeting tool start_transcription' "$test_root/doctor.log"
 grep -Fq 'PASS  image tool start_edit' "$test_root/doctor.log"

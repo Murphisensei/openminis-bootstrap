@@ -1,0 +1,4 @@
+interface:
+  display_name: "Firecrawl Web"
+  short_description: "Extract JS-heavy pages and map sites safely"
+  default_prompt: "Use $firecrawl-web when normal web search cannot reliably extract or map the requested public source."

@@ -8,6 +8,8 @@
 | `OPENVIKING_MCP_TOKEN` | 是 | 该iCloud/设备组专用的OpenViking Bearer Token |
 | `WEBSEARCH_MCP_URL` | 是 | Vaultwarden条目中的AWS KR Tailnet HTTPS MCP地址 |
 | `WEBSEARCH_MCP_TOKEN` | 是 | 该iCloud/设备组专用的Web Search Bearer Token |
+| `FIRECRAWL_MCP_URL` | 启用Firecrawl时 | Vaultwarden条目中的AWS KR Tailnet HTTPS安全桥地址 |
+| `FIRECRAWL_MCP_TOKEN` | 启用Firecrawl时 | 该iCloud/设备组专用的Firecrawl Bridge Bearer Token |
 | `MEETING_MCP_URL` | 启用会议功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
 | `MEETING_MCP_TOKEN` | 启用会议功能时 | 该iCloud/设备组专用的Meeting Bearer Token |
 | `IMAGE_MCP_URL` | 启用图片功能时 | Vaultwarden条目中的AWS KR Tailnet HTTPS地址 |
@@ -27,7 +29,9 @@
 Freddy设备填写Freddy Token，Yurik设备填写Yurik Token。不同OpenViking Token访问同一个
 全库，不创建个人数据孤岛。不要在客户端设置OpenViking account/user Header；Bridge固定
 连接现有共享数据面。Web Search上游密钥和DashScope Key都只保留在AWS KR，绝不填写到
-OpenMinis。六个新增能力各自使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
+OpenMinis。各项可选能力使用独立Token；只填URL而漏填Token（或反之）不会注册该MCP。
+Dashi和Firecrawl等AWS KR能力的上游密钥只留在服务端；Firecrawl客户端Token只授权服务端
+白名单，不会作为上游Firecrawl API凭据转发。
 Dashi的Freddy/Yurik出生档案保存在AWS KR的root管理私有文件，不经OpenViking检索，也不
 下发到手机。
 

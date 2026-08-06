@@ -19,6 +19,10 @@ case "$command" in
         printf '%s\n' \
           'web_search read_url x_search vertical_search grounded_search travel_search market_data finance_documents drug_search clinical_trials weather_search geo_search company_search aviation_search provider_status health'
         ;;
+      firecrawl)
+        printf '%s\n' \
+          'firecrawl_scrape firecrawl_map firecrawl_search firecrawl_research_search_papers firecrawl_research_inspect_paper firecrawl_research_related_papers firecrawl_research_read_paper firecrawl_research_search_github health'
+        ;;
       meeting)
         printf '%s\n' \
           'create_upload start_transcription search_meetings get_meeting_transcript meeting_status job_status cancel_job health'

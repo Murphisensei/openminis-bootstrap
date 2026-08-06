@@ -3,8 +3,8 @@
 这个公开仓库为 Freddy 和 Yurik 分别初始化 OpenMinis。两边的助手都叫 **Taco**，但使用不同的 SOUL、移动端 Agent Skill 和每项 MCP 的独立 Bearer Token。
 
 两个入口访问同一个 OpenViking 全库和同一套 AWS KR 共用能力。每项能力保持独立 MCP
-与独立 Skill：Web Search、会议转录、图片生成/编辑、短视频生成、文档/公众号读取、文件下载和
-Dashi 传统术数。Dashi 的 Freddy/Yurik 出生档案只保存在 AWS KR 服务端私有文件中。
+与独立 Skill：Web Search、Firecrawl 强提取/站点映射、会议转录、图片生成/编辑、短视频生成、
+文档/公众号读取、文件下载和 Dashi 传统术数。Dashi 的 Freddy/Yurik 出生档案只保存在 AWS KR 服务端私有文件中。
 Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔离的空记忆池。
 
 仓库不包含密钥、Vaultwarden 标识、私人账号、Tailnet 主机名、内网地址或记忆正文，也不安装模型 Provider、远程执行工具或服务器专用 Skill。共用 MCP 与对应基础 Skill 由 manifest 管理；个人专属能力放在单独 GitHub 仓库中。
@@ -16,6 +16,7 @@ Token 用于身份、审计和单独撤销；OpenViking Token 不创建彼此隔
    - `OPENVIKING_MCP_TOKEN`：必须使用这个人的 Vaultwarden Token
    - `WEBSEARCH_MCP_URL`
    - `WEBSEARCH_MCP_TOKEN`：必须使用这个人的 Vaultwarden Token
+   - 启用 Firecrawl 时，再添加 `FIRECRAWL_MCP_URL/FIRECRAWL_MCP_TOKEN`
    - 已启用时，再分别添加 `MEETING_MCP_URL/TOKEN`、`IMAGE_MCP_URL/TOKEN`、
      `VIDEO_MCP_URL/TOKEN`、`PDF_MCP_URL/TOKEN`、`DOWNLOAD_MCP_URL/TOKEN`
      和 `DASHI_MCP_URL/TOKEN`
@@ -49,6 +50,7 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --co
 - `/var/minis/skills/openminis-agent`
 - `/var/minis/skills/openviking-memory`
 - `/var/minis/skills/web-search`
+- `/var/minis/skills/firecrawl-web`
 - `/var/minis/skills/finance-lookup`
 - `/var/minis/skills/biomedical-lookup`
 - `/var/minis/skills/travel-lookup`
@@ -82,7 +84,7 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh && sh /var/minis/ski
 installer，第二次会弹出原生 SOUL 确认并建立可校验的 iCloud 同步状态。
 
 新的共用 MCP 必须同时提供对应 Skill，并登记到 manifest；Bootstrap 会统一安装和检查。
-当前新增六项设为可选：变量成对存在时自动注册并严格检查，未发放该人的 Token 时则明确
+可选能力使用成对变量：变量成对存在时自动注册并严格检查，未发放该人的 Token 时则明确
 显示为“optional MCP is not configured”，不会阻断已有功能更新。
 Freddy 或 Yurik 的个性化 Skill/配置使用单独 GitHub 仓库，通过对应 `SKILL.md` URL 额外导入，不加入这个共享 Bootstrap。
 

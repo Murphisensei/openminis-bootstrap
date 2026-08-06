@@ -9,6 +9,7 @@
     "openminis-bootstrap",
     "openviking-memory",
     "web-search",
+    "firecrawl-web",
     "finance-lookup",
     "biomedical-lookup",
     "travel-lookup",
@@ -73,6 +74,25 @@
         "company_search",
         "aviation_search",
         "provider_status",
+        "health"
+      ]
+    },
+    {
+      "name": "firecrawl",
+      "skill": "firecrawl-web",
+      "urlEnv": "FIRECRAWL_MCP_URL",
+      "tokenEnv": "FIRECRAWL_MCP_TOKEN",
+      "required": false,
+      "note": "Tailnet authenticated Firecrawl bridge for JS-heavy extraction, mapping, and focused paper/GitHub research; API credentials stay on AWS KR.",
+      "requiredTools": [
+        "firecrawl_scrape",
+        "firecrawl_map",
+        "firecrawl_search",
+        "firecrawl_research_search_papers",
+        "firecrawl_research_inspect_paper",
+        "firecrawl_research_related_papers",
+        "firecrawl_research_read_paper",
+        "firecrawl_research_search_github",
         "health"
       ]
     },

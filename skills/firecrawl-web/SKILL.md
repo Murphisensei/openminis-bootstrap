@@ -1,6 +1,6 @@
 ---
 name: firecrawl-web
-description: Use the authenticated AWS KR Firecrawl MCP for JavaScript-heavy pages, robust extraction, site mapping, and focused paper or GitHub research when normal OpenMinis web search is insufficient.
+description: Use only after normal OpenMinis search/read fails, or for JS-heavy public pages, site mapping, extracted-content search, and focused paper/GitHub retrieval.
 ---
 
 # Firecrawl Web
@@ -10,14 +10,28 @@ Firecrawl API key stays on AWS KR, while each iCloud/device group uses its own r
 
 ## Routing
 
-- Start ordinary current-fact, news, finance, biomedical, travel, company, weather, and URL work
-  with `web-search`; it is cheaper and better routed across specialized providers.
+- Do not use this Skill for ordinary current facts, news, finance, biomedical, travel, company,
+  weather, or a normally readable public URL. Start those with `research-router` -> `web-search`.
+- Direct activation is allowed only when the user explicitly requests Firecrawl or site mapping,
+  search results must include extracted page content, or the focused paper/GitHub tools are the
+  intended retrieval surface.
+- Fallback activation requires a concrete result from the current task: the normal reader returned
+  an empty/JavaScript shell, was blocked, or materially missed the page body. "More confidence" or
+  weak topical coverage by itself is not an extraction failure.
 - Use `firecrawl_scrape` when a supplied public page is JavaScript-heavy, bot-sensitive, or was
   poorly extracted by the normal reader.
 - Use `firecrawl_map` to discover a site's relevant URLs before selecting a small number to read.
 - Use `firecrawl_search` when search results must include Firecrawl-extracted page content.
 - Use the paper research tools for focused scholarly discovery and reading; use the GitHub research
   tool for repository/code discovery. Keep authoritative native sources primary when available.
+
+## Exclusivity and stop rules
+
+- Use one Firecrawl tool that matches the gap; do not repeat the same search through `web-search`.
+- Stop when the requested page/content/evidence is complete. Do not fan out to another general
+  provider merely for reassurance.
+- Do not invoke Firecrawl in parallel with another general search provider for an ordinary lookup.
+  Multi-source corroboration requires an explicit plan with distinct source roles and deduplication.
 
 ## Commands
 

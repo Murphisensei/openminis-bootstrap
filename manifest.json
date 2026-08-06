@@ -8,6 +8,7 @@
   "managedSkills": [
     "openminis-bootstrap",
     "openviking-memory",
+    "research-router",
     "web-search",
     "firecrawl-web",
     "finance-lookup",

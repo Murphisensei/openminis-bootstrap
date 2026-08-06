@@ -53,6 +53,7 @@ test -s "$minis_root/config/openminis-bootstrap/soul-native.sha256"
 cmp -s "$repo_root/profiles/freddy/SOUL.md" "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/openminis-bootstrap/SKILL.md"
 test -s "$minis_root/skills/openviking-memory/SKILL.md"
+test -s "$minis_root/skills/research-router/SKILL.md"
 test -s "$minis_root/skills/web-search/SKILL.md"
 test -s "$minis_root/skills/firecrawl-web/SKILL.md"
 test -s "$minis_root/skills/finance-lookup/SKILL.md"
@@ -73,8 +74,18 @@ if grep -Fq 'mcp_job.py wechat-read-start' "$minis_root/skills/pdf-reader/SKILL.
   exit 1
 fi
 grep -Fq 'always route it to wechat-article first' "$minis_root/skills/web-search/SKILL.md"
+grep -Fq 'Choose exactly one primary provider for each subquestion' \
+  "$minis_root/skills/research-router/SKILL.md"
+grep -Fq 'Do not run `web-search` and' \
+  "$minis_root/skills/research-router/SKILL.md"
+grep -Fq 'Route to `firecrawl-web` only after `read_url`' \
+  "$minis_root/skills/web-search/SKILL.md"
+grep -Fq 'Fallback activation requires a concrete result from the current task' \
+  "$minis_root/skills/firecrawl-web/SKILL.md"
 grep -Fq 'Highest-priority URL route' "$minis_root/skills/openminis-agent/SKILL.md"
 grep -Fq 'WECHAT_SOURCE_READY' "$minis_root/skills/openminis-agent/SKILL.md"
+grep -Fq 'Use the installed `research-router` whenever current web evidence' \
+  "$minis_root/skills/openminis-agent/SKILL.md"
 grep -Fq '第一项工具动作必须使用 `wechat-article`' "$minis_root/memory/SOUL.md"
 test -s "$minis_root/skills/file-download/SKILL.md"
 test -s "$minis_root/skills/dashi/SKILL.md"

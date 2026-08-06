@@ -49,6 +49,7 @@ sh /var/minis/skills/openminis-bootstrap/scripts/install.sh --profile yurik --co
 - `/var/minis/memory/SOUL.md`
 - `/var/minis/skills/openminis-agent`
 - `/var/minis/skills/openviking-memory`
+- `/var/minis/skills/research-router`
 - `/var/minis/skills/web-search`
 - `/var/minis/skills/firecrawl-web`
 - `/var/minis/skills/finance-lookup`

@@ -40,6 +40,16 @@ If discovery is stale, run `minis-mcp-cli tools websearch --refresh` once.
 - Leave provider selection on `auto` unless the user requests a provider or diagnostics require an
   explicit one. Do not rely on DuckDuckGo as an automatic fallback from a cloud-host IP.
 
+## Stop or hand off
+
+- If the selected search/read call returns enough direct evidence, stop. Do not call Firecrawl or a
+  second overlapping provider merely to repeat the same lookup.
+- Route to `firecrawl-web` only after `read_url` returns an empty/JavaScript shell, a blocked or
+  materially incomplete body, or when the task requires site URL mapping or search results with
+  extracted page content. Preserve the failed URL and the exact extraction gap in the handoff.
+- Do not run `websearch` and `firecrawl` in parallel for an ordinary subquestion. Deliberate deep
+  corroboration may use multiple sources only when each provider has a distinct evidence role.
+
 This Skill can answer a single travel lookup or compare a small candidate set. For multi-day route
 design, cross-source optimization, booking strategy, or a task needing sustained synthesis, collect
 only enough current evidence to produce a compact OpenClaw handoff brief. Do not attempt to recreate

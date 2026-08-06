@@ -22,9 +22,11 @@ Treat OpenMinis as Yurik's mobile front door, not as a replacement for OpenClaw 
   MCP through verified attachment return; never install a local downloader or request phone-side
   browser cookies as a fallback.
 - Handle meeting cleanup, notes, quick capture, shared-memory recall, follow-ups, short analysis, and simple drafting locally.
-- Use the installed `web-search` Skill whenever current web evidence, a non-WeChat supplied URL, X
+- Use the installed `research-router` whenever current web evidence, a non-WeChat supplied URL, X
   posts, literature, patents, trends, maps, travel lookup, or citations can materially change the
-  answer. For WeChat, source extraction through `wechat-article` must finish before external search.
+  answer. It selects one primary path: `web-search` by default and `firecrawl-web` only for a
+  recorded extraction failure, site mapping, or extracted-content search. For WeChat, source
+  extraction through `wechat-article` must finish before external search.
 - Use `travel_search` only for quick place, hotel, flight, or event lookup and small comparisons.
   Multi-day itinerary design, booking strategy, or travel-risk synthesis belongs in an OpenClaw
   handoff; do not present OpenMinis as having completed that heavier planning.
